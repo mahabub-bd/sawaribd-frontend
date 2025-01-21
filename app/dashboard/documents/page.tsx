@@ -1,9 +1,11 @@
 import BikeList from "@/components/dashboard/bike-information/bike-list";
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const response = await fetch("https://api.sawaribd.com/bike-information");
+  const bikedatas = await response.json();
   return (
     <div>
-      <BikeList />
+      <BikeList bikedatas={bikedatas} />
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
   const currentYear = new Date().getFullYear();
   const lastEightYears = Array.from({ length: 8 }, (_, i) => currentYear - i);
 
-  // Apply filtering logic
+
   const filteredData = bikedatas.filter((data) => {
     const brandMatch =
       brandFilter && brandFilter !== "all"
@@ -42,15 +42,14 @@ export default function BikeList({ bikedatas }: BikeProps) {
   });
 
   return (
-    <div>
+    <div className="md:p-4 p-4 bg-white shadow-2xl rounded-lg">
       {/* Filter Controls */}
 
-      <div className="grid grid-cols-4 gap-4 md:py-4 py-2">
+      <div className="grid md:grid-cols-4 grid-cols-2 gap-2 md:py-2 py-2">
         {/* Engine Number Search */}
         <Input
           type="text"
           placeholder="Search by Engine Number"
-          className="border border-gray-300 rounded px-3 py-2 "
           value={engineNumber}
           onChange={(e) => setEngineNumber(e.target.value)}
         />
@@ -59,7 +58,6 @@ export default function BikeList({ bikedatas }: BikeProps) {
         <Input
           type="text"
           placeholder="Search by Chassis Number"
-          className="border border-gray-300 rounded px-3 py-2 "
           value={chassisNumber}
           onChange={(e) => setChassisNumber(e.target.value)}
         />
@@ -68,7 +66,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
           <SelectTrigger>
             <SelectValue placeholder="Select Brand" />
           </SelectTrigger>
-          <SelectContent side="right">
+          <SelectContent>
             <SelectItem value="all">All Brands</SelectItem>
             <SelectItem value="Honda">Honda</SelectItem>
             <SelectItem value="Yamaha">Yamaha</SelectItem>
@@ -85,7 +83,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
           <SelectTrigger className="">
             <SelectValue placeholder="Manufacturing Year" />
           </SelectTrigger>
-          <SelectContent side="right">
+          <SelectContent>
             <SelectItem value="all">All Years</SelectItem>
             {lastEightYears.map((year) => (
               <SelectItem key={year} value={year.toString()}>
@@ -95,7 +93,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
           </SelectContent>
         </Select>
       </div>
-      <h2 className="font-bold py-2 text-center text-2xl">
+      <h2 className="font-bold py-2  text-xl">
         Bike Found : {`${filteredData.length}`}
       </h2>
       {/* Bike Items */}

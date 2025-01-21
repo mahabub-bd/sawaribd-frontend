@@ -45,7 +45,24 @@ export default function BikeList({ bikedatas }: BikeProps) {
     <div>
       {/* Filter Controls */}
 
-      <div className="grid grid-cols-4 gap-4 md:py-6 py-4">
+      <div className="grid grid-cols-4 gap-4 md:py-4 py-2">
+        {/* Engine Number Search */}
+        <Input
+          type="text"
+          placeholder="Search by Engine Number"
+          className="border border-gray-300 rounded px-3 py-2 "
+          value={engineNumber}
+          onChange={(e) => setEngineNumber(e.target.value)}
+        />
+
+        {/* Chassis Number Search */}
+        <Input
+          type="text"
+          placeholder="Search by Chassis Number"
+          className="border border-gray-300 rounded px-3 py-2 "
+          value={chassisNumber}
+          onChange={(e) => setChassisNumber(e.target.value)}
+        />
         {/* Brand Filter */}
         <Select onValueChange={(value) => setBrandFilter(value)}>
           <SelectTrigger>
@@ -66,7 +83,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
           }
         >
           <SelectTrigger className="">
-            <SelectValue placeholder="Select Year" />
+            <SelectValue placeholder="Manufacturing Year" />
           </SelectTrigger>
           <SelectContent side="right">
             <SelectItem value="all">All Years</SelectItem>
@@ -77,26 +94,8 @@ export default function BikeList({ bikedatas }: BikeProps) {
             ))}
           </SelectContent>
         </Select>
-
-        {/* Engine Number Search */}
-        <Input
-          type="text"
-          placeholder="Search by Engine Number"
-          className="border border-gray-300 rounded px-3 py-2 "
-          value={engineNumber}
-          onChange={(e) => setEngineNumber(e.target.value)}
-        />
-
-        {/* Chassis Number Search */}
-        <Input
-          type="text"
-          placeholder="Search by Chassis Number"
-          className="border border-gray-300 rounded px-3 py-2 "
-          value={chassisNumber}
-          onChange={(e) => setChassisNumber(e.target.value)}
-        />
       </div>
-      <h2 className="font-bold py-4">
+      <h2 className="font-bold py-2 text-center text-2xl">
         Bike Found : {`${filteredData.length}`}
       </h2>
       {/* Bike Items */}

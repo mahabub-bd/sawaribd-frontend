@@ -43,3 +43,22 @@ export interface CustomLinkProps {
   path: string;
   children: React.ReactNode;
 }
+
+export interface BikeDetailsType {
+  _id: string;
+  name: string;
+  address: string;
+  bikeBrand: string;
+  bikeModel: string;
+  engineNumber: string;
+  chassisNumber: string;
+  manufacturingYear: number;
+  registrationStatus: string;
+  registrationNumber: string;
+  odo: number;
+  regDocument: Attachment;
+  currentPhoto: Attachment;
+  sellingVideo: Attachment;
+  user: User;
+  createdAt: string;
+}

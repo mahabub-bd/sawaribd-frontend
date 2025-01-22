@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 
 import { BikeDetailsType } from "@/types";
+
 import { formatDate } from "@/utils/helper";
 import Image from "next/image";
 
@@ -30,6 +31,7 @@ const BikeItem = ({
   registrationNumber,
   currentPhoto,
   regDocument,
+  sellingVideo,
   user,
   createdAt,
   nid,
@@ -104,27 +106,43 @@ const BikeItem = ({
                     <Image
                       src={currentPhoto.path}
                       alt="Current Bike Photo"
-                      width={150}
-                      height={100}
+                      width={400}
+                      height={300}
                       className="rounded-lg shadow-xl"
                     />
                   </TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>Registration Document</TableCell>
                   <TableCell>
                     <Image
                       src={regDocument.path}
                       alt="Registration Document"
-                      width={150}
-                      height={100}
+                      width={400}
+                      height={300}
                       className="rounded-lg shadow-xl"
                     />
                   </TableCell>
                 </TableRow>
-
                 <TableRow>
-                  <TableCell>Uploaded By</TableCell>
-                  <TableCell>{user.name}</TableCell>
+                  <TableCell>Selling Video</TableCell>
+                  <TableCell>
+                    <Image
+                      src={sellingVideo.path}
+                      alt="Current Bike Photo"
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl"
+                    />
+                  </TableCell>
                 </TableRow>
+                {user && (
+                  <TableRow>
+                    <TableCell>Uploaded By</TableCell>
+                    <TableCell>{user?.name}</TableCell>
+                  </TableRow>
+                )}
+
                 {createdAt && (
                   <TableRow>
                     <TableCell>Uploaded At</TableCell>

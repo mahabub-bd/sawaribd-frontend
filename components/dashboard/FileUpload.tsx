@@ -92,7 +92,7 @@ export default function FileUpload({
   };
 
   return (
-    <div className="mx-auto p-6 border rounded-lg shadow-sm ">
+    <div className="mx-auto p-4 border rounded-lg shadow-sm ">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

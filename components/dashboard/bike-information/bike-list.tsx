@@ -73,6 +73,8 @@ export default function BikeList({ bikedatas }: BikeProps) {
             <SelectItem value="Honda">Honda</SelectItem>
             <SelectItem value="Yamaha">Yamaha</SelectItem>
             <SelectItem value="Suzuki">Suzuki</SelectItem>
+            <SelectItem value="TVS">TVS</SelectItem>
+            <SelectItem value="Bazaz">Bazaz</SelectItem>
           </SelectContent>
         </Select>
 

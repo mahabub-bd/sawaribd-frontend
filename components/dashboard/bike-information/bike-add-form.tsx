@@ -5,6 +5,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -110,14 +111,14 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <FileUpload
-          onUploadSuccess={handleUploadSuccess("regDocument")}
-          label="Registration Document"
-        />
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
         <FileUpload
           onUploadSuccess={handleUploadSuccess("currentPhoto")}
           label="Current Bike Photo"
+        />
+        <FileUpload
+          onUploadSuccess={handleUploadSuccess("regDocument")}
+          label="Registration Document"
         />
         <FileUpload
           onUploadSuccess={handleUploadSuccess("sellingVideo")}
@@ -143,6 +144,12 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                     name="registrationStatus"
                     render={({ field }) => (
                       <FormItem>
+                        <FormLabel
+                          htmlFor="registrationStatus"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Registration Status
+                        </FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -173,6 +180,12 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                   name={key as keyof z.infer<typeof bikeAddSchema>}
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel
+                        htmlFor={key}
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {placeholders[key] || key}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder={placeholders[key] || ""}

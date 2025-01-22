@@ -47,6 +47,8 @@ export interface CustomLinkProps {
 export interface BikeDetailsType {
   _id: string;
   name: string;
+  nid: number;
+  phoneNumber: string;
   address: string;
   bikeBrand: string;
   bikeModel: string;

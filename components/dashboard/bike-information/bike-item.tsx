@@ -16,6 +16,7 @@ import {
 import { BikeDetailsType } from "@/types";
 import { formatDate } from "@/utils/helper";
 import Image from "next/image";
+import { UserAddAction } from "../modal/UserAddAction";
 
 const BikeItem = ({
   name,
@@ -32,9 +33,12 @@ const BikeItem = ({
   regDocument,
   user,
   createdAt,
+  nid,
+  phoneNumber,
 }: BikeDetailsType) => {
   return (
     <div className="md:p-4 p-6 bg-white shadow-2xl rounded-lg">
+     
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>{`Brand: ${bikeBrand} -- Model: ${bikeModel}`}</AccordionTrigger>
@@ -50,6 +54,14 @@ const BikeItem = ({
                 <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell>{name}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Phone Number</TableCell>
+                  <TableCell>{phoneNumber}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>NID Number</TableCell>
+                  <TableCell>{nid}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Address</TableCell>

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import { BikeDetailsType } from "@/types";
 import { useState } from "react";
+import BikeAddAction from "../modal/BikeAddAction";
 import BikeItem from "./bike-item";
 
 interface BikeProps {
@@ -23,7 +24,6 @@ export default function BikeList({ bikedatas }: BikeProps) {
 
   const currentYear = new Date().getFullYear();
   const lastEightYears = Array.from({ length: 8 }, (_, i) => currentYear - i);
-
 
   const filteredData = bikedatas.filter((data) => {
     const brandMatch =
@@ -44,7 +44,9 @@ export default function BikeList({ bikedatas }: BikeProps) {
   return (
     <div className="md:p-4 p-4 bg-white shadow-2xl rounded-lg">
       {/* Filter Controls */}
-
+      <div className="flex justify-end my-2">
+        <BikeAddAction />
+      </div>
       <div className="grid md:grid-cols-4 grid-cols-2 gap-2 md:py-2 py-2">
         {/* Engine Number Search */}
         <Input

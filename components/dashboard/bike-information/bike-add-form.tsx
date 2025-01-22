@@ -24,10 +24,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 import FileUpload from "../FileUpload";
 
-// Validation Schema
 const bikeAddSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  nid: z.number().int().min(1000000000000).max(9999999999999), // Assuming 13-digit NID
+  nid: z.coerce.number().int().min(1000000000).max(9999999999),
   phoneNumber: z
     .string()
     .min(10, "Phone number must be at least 10 characters."),
@@ -36,18 +35,21 @@ const bikeAddSchema = z.object({
   bikeModel: z.string().min(2, "Bike model is required."),
   engineNumber: z.string().min(3, "Engine number is required."),
   chassisNumber: z.string().min(3, "Chassis number is required."),
-  manufacturingYear: z.number().int().min(1900).max(new Date().getFullYear()),
+  manufacturingYear: z.coerce
+    .number()
+    .int()
+    .min(1900)
+    .max(new Date().getFullYear()),
   registrationStatus: z.enum(["On Test", "Registered"]),
   registrationNumber: z.string().optional(),
-  odo: z
+  odo: z.coerce
     .number()
-    .min(0, { message: "Odometer reading must be a positive number." }),
+    .min(2, { message: "Odometer reading must be a positive number." }),
   regDocument: z.string().optional(),
   currentPhoto: z.string().optional(),
   sellingVideo: z.string().optional(),
 });
 
-// Placeholders
 const placeholders: Record<string, string> = {
   name: "Enter User Name",
   nid: "Enter National ID Number",
@@ -59,6 +61,7 @@ const placeholders: Record<string, string> = {
   chassisNumber: "Enter Chassis Number",
   manufacturingYear: "Enter Manufacturing Year",
   odo: "Enter Odometer Reading (Optional)",
+  registrationNumber: "Enter Registration Number (Optional)",
 };
 
 interface BikeAddFormProps {
@@ -70,17 +73,17 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
     resolver: zodResolver(bikeAddSchema),
     defaultValues: {
       name: "",
-      nid: 0, // Set initial value to 0
+      nid: 0,
       phoneNumber: "",
       address: "",
       bikeBrand: "",
       bikeModel: "",
       engineNumber: "",
       chassisNumber: "",
-      manufacturingYear: new Date().getFullYear(), // No need for toString()
+      manufacturingYear: new Date().getFullYear(),
       registrationStatus: "On Test",
       registrationNumber: "",
-      odo: 0, // Set initial value to 0
+      odo: 0,
     },
   });
 
@@ -93,6 +96,8 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
   const onSubmit: SubmitHandler<z.infer<typeof bikeAddSchema>> = async (
     values
   ) => {
+    console.log(values);
+
     try {
       await postData("bike-information", values);
       toast.success("Bike information added successfully.");
@@ -105,7 +110,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <FileUpload
           onUploadSuccess={handleUploadSuccess("regDocument")}
           label="Registration Document"
@@ -172,7 +177,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                         <Input
                           placeholder={placeholders[key] || ""}
                           type={
-                            ["manufacturingYear", "odo", "nid"].includes(key)
+                            ["manufacturingYear", "odo"].includes(key)
                               ? "number"
                               : "text"
                           }
@@ -190,7 +195,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
           <div className="grid grid-cols-2 gap-4">
             <Button
               type="button"
-              className="bg-gray-200 text-gray-700 hover:bg-gray-300 w-1/2"
+              className="bg-gray-200 text-gray-700 hover:bg-gray-300"
               onClick={() => isOpen(false)}
             >
               Cancel

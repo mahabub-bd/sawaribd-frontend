@@ -22,9 +22,65 @@ export default function BikeList({ bikedatas }: BikeProps) {
   const [yearFilter, setYearFilter] = useState<number | null>(null);
   const [engineNumber, setEngineNumber] = useState<string>("");
   const [chassisNumber, setChassisNumber] = useState<string>("");
+  const [dateRangeFilter, setDateRangeFilter] = useState<string>("all");
 
   const currentYear = new Date().getFullYear();
   const lastEightYears = Array.from({ length: 8 }, (_, i) => currentYear - i);
+
+  const getDateFilterRange = (filter: string) => {
+    const today = new Date();
+    const startOfWeek = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - today.getDay() + 1
+    ); // Monday
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+    const startOfLastMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() - 1,
+      1
+    );
+    const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+
+    const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
+    const endOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
+
+    const startOfLastWeek = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - today.getDay() - 6
+    );
+    const endOfLastWeek = new Date(
+      startOfLastWeek.getFullYear(),
+      startOfLastWeek.getMonth(),
+      startOfLastWeek.getDate() + 6
+    );
+
+    const sixMonthsAgo = new Date(today.setMonth(today.getMonth() - 6));
+
+    switch (filter) {
+      case "today":
+        return [new Date(), new Date()];
+      case "thisWeek":
+        return [startOfWeek, new Date()];
+      case "lastWeek":
+        return [startOfLastWeek, endOfLastWeek];
+      case "thisMonth":
+        return [startOfMonth, new Date()];
+      case "lastMonth":
+        return [startOfLastMonth, endOfLastMonth];
+      case "thisYear":
+        return [startOfYear, new Date()];
+      case "lastYear":
+        return [startOfLastYear, endOfLastYear];
+      case "lastSixMonths":
+        return [sixMonthsAgo, new Date()];
+      default:
+        return null;
+    }
+  };
 
   const filteredData = bikedatas.filter((data) => {
     const brandMatch =
@@ -39,7 +95,19 @@ export default function BikeList({ bikedatas }: BikeProps) {
       ? data.chassisNumber?.toLowerCase().includes(chassisNumber.toLowerCase())
       : true;
 
-    return brandMatch && yearMatch && engineMatch && chassisMatch;
+    const dateFilterMatch = (() => {
+      if (dateRangeFilter === "all") return true;
+
+      const range = getDateFilterRange(dateRangeFilter);
+      if (!range || !data.createdAt) return true;
+
+      const createdAt = new Date(data.createdAt);
+      return createdAt >= range[0] && createdAt <= range[1];
+    })();
+
+    return (
+      brandMatch && yearMatch && engineMatch && chassisMatch && dateFilterMatch
+    );
   });
 
   return (
@@ -48,7 +116,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
       <div className="flex justify-end my-2">
         <BikeAddAction />
       </div>
-      <div className="grid md:grid-cols-4 grid-cols-2 gap-2 md:py-2 py-2">
+      <div className="grid md:grid-cols-5 grid-cols-2 gap-2 md:py-2 py-2">
         {/* Engine Number Search */}
         <Input
           type="text"
@@ -64,6 +132,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
           value={chassisNumber}
           onChange={(e) => setChassisNumber(e.target.value)}
         />
+
         {/* Brand Filter */}
         <Select onValueChange={(value) => setBrandFilter(value)}>
           <SelectTrigger>
@@ -84,7 +153,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
             setYearFilter(value ? parseInt(value) : null)
           }
         >
-          <SelectTrigger className="">
+          <SelectTrigger>
             <SelectValue placeholder="Manufacturing Year" />
           </SelectTrigger>
           <SelectContent>
@@ -96,8 +165,26 @@ export default function BikeList({ bikedatas }: BikeProps) {
             ))}
           </SelectContent>
         </Select>
+
+        {/* Date Range Filter */}
+        <Select onValueChange={(value) => setDateRangeFilter(value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by Date Range" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Dates</SelectItem>
+            <SelectItem value="today">Today</SelectItem>
+            <SelectItem value="thisWeek">This Week</SelectItem>
+            <SelectItem value="lastWeek">Last Week</SelectItem>
+            <SelectItem value="thisMonth">This Month</SelectItem>
+            <SelectItem value="lastMonth">Last Month</SelectItem>
+            <SelectItem value="thisYear">This Year</SelectItem>
+            <SelectItem value="lastYear">Last Year</SelectItem>
+            <SelectItem value="lastSixMonths">Last 6 Months</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <h2 className="font-bold py-2  text-xl">
+      <h2 className="font-bold py-2 text-xl">
         Bike Found : {`${filteredData.length}`}
       </h2>
       {/* Bike Items */}

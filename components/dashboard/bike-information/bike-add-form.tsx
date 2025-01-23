@@ -51,6 +51,19 @@ const bikeAddSchema = z.object({
   regDocument: z.string().optional(),
   currentPhoto: z.string().optional(),
   sellingVideo: z.string().optional(),
+  witnessName: z.string().min(2, "Witness name must be at least 2 characters."),
+  witnessPhoneNumber: z.string().min(10, "Witness phone number must be valid."),
+  witnessNID: z.coerce.number().min(1000000000).max(9999999999),
+  witnessNIDPhoto: z.string(), // Assume it's a file path as a string.
+  sellerNIDandDLPhoto: z.string(), // Assume it's also a file path.
+  keyStatus: z.coerce.number().min(0, "Key status must be a valid number."),
+  purchaseAmount: z.coerce
+    .number()
+    .positive("Purchase amount must be positive."),
+  securityAmount: z.coerce
+    .number()
+    .positive("Security amount must be positive."),
+  remarks: z.string().optional(),
 });
 
 const placeholders: Record<string, string> = {
@@ -65,6 +78,13 @@ const placeholders: Record<string, string> = {
   manufacturingYear: "Enter Manufacturing Year",
   odo: "Enter Odometer Reading (Optional)",
   registrationNumber: "Enter Registration Number (Optional)",
+  witnessName: "Enter Witness Name",
+  witnessPhoneNumber: "Enter Witness Phone Number",
+  witnessNID: "Enter Witness NID",
+  keyStatus: "Enter Key Status",
+  purchaseAmount: "Enter Purchase Amount",
+  securityAmount: "Enter Security Amount",
+  remarks: "Enter Remarks (Optional)",
 };
 
 const labels: Record<string, string> = {
@@ -79,7 +99,17 @@ const labels: Record<string, string> = {
   manufacturingYear: "Manufacturing Year",
   odo: "Odometer Reading",
   registrationNumber: "Registration Number",
+  witnessName: "Witness Name",
+  witnessPhoneNumber: "Witness Phone Number",
+  witnessNID: "Witness NID",
+  witnessNIDPhoto: "Witness NID Photo",
+  sellerNIDandDLPhoto: "Seller NID & DL Photo",
+  keyStatus: "Key Status",
+  purchaseAmount: "Purchase Amount",
+  securityAmount: "Security Amount",
+  remarks: "Remarks",
 };
+
 interface BikeAddFormProps {
   isOpen: (value: boolean) => void;
 }
@@ -100,6 +130,15 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
       registrationStatus: "On Test",
       registrationNumber: "",
       odo: 0,
+      witnessName: "",
+      witnessPhoneNumber: "",
+      witnessNID: 0,
+      witnessNIDPhoto: "",
+      sellerNIDandDLPhoto: "",
+      keyStatus: 1,
+      purchaseAmount: 0,
+      securityAmount: 0,
+      remarks: "",
     },
   });
 
@@ -139,6 +178,15 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
           onUploadSuccess={handleUploadSuccess("sellingVideo")}
           label="Selling Video"
         />
+
+        <FileUpload
+          onUploadSuccess={handleUploadSuccess("witnessNIDPhoto")}
+          label="Witness NID Photo"
+        />
+        <FileUpload
+          onUploadSuccess={handleUploadSuccess("sellerNIDandDLPhoto")}
+          label="Seller NID & DL Photo"
+        />
       </div>
 
       <Form {...form}>
@@ -146,7 +194,13 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {Object.keys(form.getValues()).map((key) => {
               if (
-                ["regDocument", "currentPhoto", "sellingVideo"].includes(key)
+                [
+                  "regDocument",
+                  "currentPhoto",
+                  "sellingVideo",
+                  "witnessNIDPhoto",
+                  "sellerNIDandDLPhoto",
+                ].includes(key)
               ) {
                 return null;
               }
@@ -215,7 +269,35 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                   />
                 );
               }
-
+              if (key === "keyStatus") {
+                return (
+                  <FormField
+                    key={key}
+                    control={form.control}
+                    name="keyStatus"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Key Status</FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value.toString()}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Key Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">One</SelectItem>
+                              <SelectItem value="2">Two</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                );
+              }
               return (
                 <FormField
                   key={key}

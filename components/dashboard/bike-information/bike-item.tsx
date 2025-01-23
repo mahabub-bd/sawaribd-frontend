@@ -4,153 +4,196 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
+import { Table, TableBody } from "@/components/ui/table";
 import { BikeDetailsType } from "@/types";
-
 import { formatDate } from "@/utils/helper";
-import Image from "next/image";
+import ImagePreview from "./image-preview";
+import SectionHeading from "./section-heading";
+import TableRowData from "./table-row-data";
 
-const BikeItem = ({
-  name,
-  address,
-  bikeBrand,
-  bikeModel,
-  engineNumber,
-  chassisNumber,
-  manufacturingYear,
-  odo,
-  registrationStatus,
-  registrationNumber,
-  currentPhoto,
-  regDocument,
-  sellingVideo,
-  user,
-  createdAt,
-  nid,
-  phoneNumber,
-}: BikeDetailsType) => {
+const BikeItem = (bikeDetails: BikeDetailsType) => {
+  const {
+    name,
+    address,
+    bikeBrand,
+    bikeModel,
+    engineNumber,
+    chassisNumber,
+    manufacturingYear,
+    odo,
+    registrationStatus,
+    registrationNumber,
+    currentPhoto,
+    regDocument,
+    sellingVideo,
+    user,
+    createdAt,
+    nid,
+    phoneNumber,
+    witnessName,
+    witnessPhoneNumber,
+    witnessNID,
+    witnessNIDPhoto,
+    sellerNIDandDLPhoto,
+    keyStatus,
+    purchaseAmount,
+    securityAmount,
+    remarks,
+  } = bikeDetails;
+
   return (
-    <div className="md:p-4 p-6 bg-white shadow-2xl rounded-lg">
+    <div className="md:p-6 p-4 bg-white shadow-md rounded-lg border border-gray-200">
       <Accordion type="single" collapsible>
-        <AccordionItem value="item-1">
-          <AccordionTrigger>{`Brand: ${bikeBrand} -- Model: ${bikeModel}`}</AccordionTrigger>
+        <AccordionItem value="bike-details">
+          <AccordionTrigger className="text-lg font-semibold text-primary capitalize">
+            {`Brand: ${bikeBrand} | Model: ${bikeModel}`}
+          </AccordionTrigger>
           <AccordionContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Field</TableHead>
-                  <TableHead>Details</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>{name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Phone Number</TableCell>
-                  <TableCell>{phoneNumber}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>NID Number</TableCell>
-                  <TableCell>{nid}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Address</TableCell>
-                  <TableCell>{address}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Bike Brand</TableCell>
-                  <TableCell className="capitalize">{bikeBrand}</TableCell>
-                </TableRow>
+            <div className="space-y-6">
+              {/* Personal Information */}
+              <div>
+                <SectionHeading>Personal Information</SectionHeading>
+                <Table>
+                  <TableBody>
+                    <TableRowData label="Name" value={name} />
+                    <TableRowData label="Phone Number" value={phoneNumber} />
+                    <TableRowData label="NID Number" value={nid} />
+                    <TableRowData label="Address" value={address} />
+                  </TableBody>
+                </Table>
+              </div>
 
-                <TableRow>
-                  <TableCell>Bike Model</TableCell>
-                  <TableCell>{bikeModel}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Chassis Number</TableCell>
-                  <TableCell>{chassisNumber}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Engine Number</TableCell>
-                  <TableCell>{engineNumber}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Manufacturing Year</TableCell>
-                  <TableCell>{manufacturingYear}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Odometer (km)</TableCell>
-                  <TableCell>{odo}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Registration Status</TableCell>
-                  <TableCell>{registrationStatus}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Registration Number</TableCell>
-                  <TableCell>{registrationNumber}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Current Photo</TableCell>
-                  <TableCell>
-                    <Image
-                      src={currentPhoto.path}
-                      alt="Current Bike Photo"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl"
+              {/* Bike Details */}
+              <div>
+                <SectionHeading>Bike Details</SectionHeading>
+                <Table>
+                  <TableBody>
+                    <TableRowData
+                      label="Bike Brand"
+                      value={bikeBrand}
+                      className="capitalize"
                     />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Registration Document</TableCell>
-                  <TableCell>
-                    <Image
-                      src={regDocument.path}
-                      alt="Registration Document"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl"
+                    <TableRowData label="Bike Model" value={bikeModel} />
+                    <TableRowData
+                      label="Chassis Number"
+                      value={chassisNumber}
                     />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Selling Video</TableCell>
-                  <TableCell>
-                    <Image
-                      src={sellingVideo.path}
-                      alt="Current Bike Photo"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl"
+                    <TableRowData label="Engine Number" value={engineNumber} />
+                    <TableRowData
+                      label="Manufacturing Year"
+                      value={manufacturingYear}
                     />
-                  </TableCell>
-                </TableRow>
-                {user && (
-                  <TableRow>
-                    <TableCell>Uploaded By</TableCell>
-                    <TableCell>{user?.name}</TableCell>
-                  </TableRow>
-                )}
+                    <TableRowData label="Odometer (km)" value={odo} />
+                    <TableRowData
+                      label="Registration Status"
+                      value={
+                        <span
+                          className={`${
+                            registrationStatus === "Registered"
+                              ? "text-green-600"
+                              : "text-red-600"
+                          } font-medium`}
+                        >
+                          {registrationStatus}
+                        </span>
+                      }
+                    />
 
-                {createdAt && (
-                  <TableRow>
-                    <TableCell>Uploaded At</TableCell>
-                    <TableCell>{formatDate(createdAt)}</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                    <TableRowData
+                      label="Registration Number"
+                      value={registrationNumber}
+                    />
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Witness Information */}
+              <div>
+                <SectionHeading>Witness Information</SectionHeading>
+                <Table>
+                  <TableBody>
+                    <TableRowData label="Witness Name" value={witnessName} />
+                    <TableRowData
+                      label="Witness Phone"
+                      value={witnessPhoneNumber}
+                    />
+                    <TableRowData label="Witness NID" value={witnessNID} />
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Photos */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <ImagePreview
+                  title="Witness NID Photo"
+                  src={witnessNIDPhoto?.path}
+                  alt="Witness NID Photo"
+                />
+                <ImagePreview
+                  title="Seller NID & DL Photo"
+                  src={sellerNIDandDLPhoto?.path}
+                  alt="Seller NID & DL Photo"
+                />
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-4">
+                <ImagePreview
+                  title="Current Photo"
+                  src={currentPhoto?.path}
+                  alt="Current Bike Photo"
+                />
+                <ImagePreview
+                  title="Registration Document"
+                  src={regDocument?.path}
+                  alt="Registration Document"
+                />
+                <ImagePreview
+                  title="Dealing Video"
+                  src={sellingVideo?.path}
+                  alt="Dealing Video"
+                />
+              </div>
+
+              {/* Transaction Details */}
+              <div>
+                <SectionHeading>Transaction Details</SectionHeading>
+                <Table>
+                  <TableBody>
+                    <TableRowData label="Key Status" value={keyStatus} />
+                    <TableRowData
+                      label="Purchase Amount"
+                      value={purchaseAmount}
+                    />
+                    <TableRowData
+                      label="Security Amount"
+                      value={securityAmount}
+                    />
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Additional Information */}
+              <div>
+                <SectionHeading>Additional Information</SectionHeading>
+                <Table>
+                  <TableBody>
+                    <TableRowData label="Uploaded By" value={user?.name} />
+                    <TableRowData
+                      label="Uploaded At"
+                      value={formatDate(createdAt)}
+                    />
+                  </TableBody>
+                </Table>
+              </div>
+              <div>
+                <SectionHeading>Remarks</SectionHeading>
+                <Table>
+                  <TableBody>
+                    <TableRowData label="Remarks" value={remarks} />
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

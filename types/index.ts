@@ -58,6 +58,15 @@ export interface BikeDetailsType {
   registrationStatus: string;
   registrationNumber: string;
   odo: number;
+  witnessName: string;
+  witnessPhoneNumber: string;
+  witnessNID: number;
+  witnessNIDPhoto: Attachment;
+  sellerNIDandDLPhoto: Attachment;
+  keyStatus: number;
+  purchaseAmount: number;
+  securityAmount: number;
+  remarks: string;
   regDocument: Attachment;
   currentPhoto: Attachment;
   sellingVideo: Attachment;

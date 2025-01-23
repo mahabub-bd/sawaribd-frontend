@@ -7,7 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BikeDetailsType } from "@/types";
+import { brands } from "@/constants";
+import { BikeDetailsType, Brand } from "@/types";
 import { useState } from "react";
 import BikeAddAction from "../modal/BikeAddAction";
 import BikeItem from "./bike-item";
@@ -69,12 +70,11 @@ export default function BikeList({ bikedatas }: BikeProps) {
             <SelectValue placeholder="Select Brand" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Brands</SelectItem>
-            <SelectItem value="Honda">Honda</SelectItem>
-            <SelectItem value="Yamaha">Yamaha</SelectItem>
-            <SelectItem value="Suzuki">Suzuki</SelectItem>
-            <SelectItem value="TVS">TVS</SelectItem>
-            <SelectItem value="Bazaz">Bazaz</SelectItem>
+            {brands.map((brand: Brand) => (
+              <SelectItem key={brand.id} value={brand.id}>
+                {brand.name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 

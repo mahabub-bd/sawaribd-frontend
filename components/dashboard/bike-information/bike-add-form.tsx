@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { brands } from "@/constants";
+import { Brand } from "@/types";
 import { postData } from "@/utils/apiServices";
 import { serverRevalidate } from "@/utils/revalidatePath";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -65,6 +67,19 @@ const placeholders: Record<string, string> = {
   registrationNumber: "Enter Registration Number (Optional)",
 };
 
+const labels: Record<string, string> = {
+  name: "Name",
+  nid: "National ID Number",
+  phoneNumber: "Phone Number",
+  address: "Address",
+  bikeBrand: "Bike Brand",
+  bikeModel: "Bike Model",
+  engineNumber: "Engine Number",
+  chassisNumber: "Chassis Number",
+  manufacturingYear: "Manufacturing Year",
+  odo: "Odometer Reading",
+  registrationNumber: "Registration Number",
+};
 interface BikeAddFormProps {
   isOpen: (value: boolean) => void;
 }
@@ -77,7 +92,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
       nid: 0,
       phoneNumber: "",
       address: "",
-      bikeBrand: "",
+      bikeBrand: "all",
       bikeModel: "",
       engineNumber: "",
       chassisNumber: "",
@@ -144,12 +159,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                     name="registrationStatus"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel
-                          htmlFor="registrationStatus"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Registration Status
-                        </FormLabel>
+                        <FormLabel>Registration Status</FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -173,6 +183,39 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                 );
               }
 
+              if (key === "bikeBrand") {
+                return (
+                  <FormField
+                    key={key}
+                    control={form.control}
+                    name="bikeBrand"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Bike Brand</FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Bike Brand" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {brands.map((brand: Brand) => (
+                                <SelectItem key={brand.id} value={brand.id}>
+                                  {brand.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                );
+              }
+
               return (
                 <FormField
                   key={key}
@@ -180,21 +223,16 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                   name={key as keyof z.infer<typeof bikeAddSchema>}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel
-                        htmlFor={key}
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        {placeholders[key] || key}
-                      </FormLabel>
+                      <FormLabel>{labels[key] || key}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={placeholders[key] || ""}
                           type={
-                            ["manufacturingYear", "odo"].includes(key)
+                            ["manufacturingYear", "nid", "odo"].includes(key)
                               ? "number"
                               : "text"
                           }
                           {...field}
+                          placeholder={placeholders[key] || `Enter ${key}`}
                         />
                       </FormControl>
                       <FormMessage />

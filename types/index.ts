@@ -64,3 +64,7 @@ export interface BikeDetailsType {
   user: User;
   createdAt: string;
 }
+export interface Brand {
+  id: string;
+  name: string;
+}

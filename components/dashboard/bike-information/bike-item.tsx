@@ -69,7 +69,7 @@ const BikeItem = ({
                 </TableRow>
                 <TableRow>
                   <TableCell>Bike Brand</TableCell>
-                  <TableCell>{bikeBrand}</TableCell>
+                  <TableCell className="capitalize">{bikeBrand}</TableCell>
                 </TableRow>
 
                 <TableRow>

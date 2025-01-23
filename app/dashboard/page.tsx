@@ -12,7 +12,7 @@ const AdminDashboard = async () => {
 
   return (
     <section className="container h-s mx-auto md:p-8 p-6 bg-white shadow-2xl rounded-lg ">
-      <Card className="w-full max-w-md shadow-lg rounded-md border border-gray-200 bg-white">
+      <Card className="w-full  shadow-lg rounded-md border border-gray-200 bg-white">
         <CardHeader className="p-4 border-b border-gray-200">
           <CardTitle className="text-lg font-bold">
             Name: {session?.user?.name || "User Name"}
@@ -21,7 +21,7 @@ const AdminDashboard = async () => {
 
         <CardContent className="p-4 space-y-2">
           <p className="text-gray-600">
-            <span className="font-medium">Role:</span>{" "}
+            <span className="font-medium">Role:</span>
             {session?.user?.role || "User Role"}
           </p>
           <p className="text-gray-600">

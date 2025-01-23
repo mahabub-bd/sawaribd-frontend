@@ -23,12 +23,12 @@ if (!secretKey) {
 const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function createSession(payload: Session) {
-  const expiredAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+  const expiredAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 7 days
 
   const session = await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime(expiredAt)
     .sign(encodedKey);
 
   const cookieStore = await cookies();

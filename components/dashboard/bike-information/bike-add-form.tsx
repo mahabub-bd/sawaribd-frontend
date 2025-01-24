@@ -169,23 +169,28 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
         <FileUpload
           onUploadSuccess={handleUploadSuccess("currentPhoto")}
           label="Current Bike Photo"
-        />
-        <FileUpload
-          onUploadSuccess={handleUploadSuccess("regDocument")}
-          label="Registration Document"
-        />
-        <FileUpload
-          onUploadSuccess={handleUploadSuccess("sellingVideo")}
-          label="Selling Video"
+          supportFormat="Supported formats: JPG, PNG"
         />
 
         <FileUpload
           onUploadSuccess={handleUploadSuccess("witnessNIDPhoto")}
           label="Witness NID Photo"
+          supportFormat="Supported formats: JPG, PNG"
         />
         <FileUpload
           onUploadSuccess={handleUploadSuccess("sellerNIDandDLPhoto")}
           label="Seller NID & DL Photo"
+          supportFormat="Supported formats: JPG, PNG"
+        />
+        <FileUpload
+          onUploadSuccess={handleUploadSuccess("regDocument")}
+          label="Registration Document"
+          supportFormat="Supported formats: PDF"
+        />
+        <FileUpload
+          onUploadSuccess={handleUploadSuccess("sellingVideo")}
+          label="Selling Video"
+          supportFormat="Supported formats: MP4"
         />
       </div>
 

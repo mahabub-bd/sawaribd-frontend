@@ -27,7 +27,7 @@ export const BikeAddAction = () => {
         </button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[1000px] h-[80vh] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[900px] h-[80vh] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Bike Information</DialogTitle>
           <DialogDescription>

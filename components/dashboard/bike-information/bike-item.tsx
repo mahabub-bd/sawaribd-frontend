@@ -42,7 +42,7 @@ const BikeItem = (bikeDetails: BikeDetailsType) => {
   } = bikeDetails;
 
   return (
-    <div className="md:p-6 p-4 bg-white shadow-md rounded-lg border border-gray-200">
+    <div className="md:p-6 p-4 bg-white rounded-lg border border-gray-200">
       <Accordion type="single" collapsible>
         <AccordionItem value="bike-details">
           <AccordionTrigger className="text-lg font-semibold text-primary capitalize">
@@ -126,12 +126,12 @@ const BikeItem = (bikeDetails: BikeDetailsType) => {
               <div className="grid md:grid-cols-2 gap-4">
                 <ImagePreview
                   title="Witness NID Photo"
-                  src={witnessNIDPhoto?.path}
+                  imageUrl={witnessNIDPhoto?.path}
                   alt="Witness NID Photo"
                 />
                 <ImagePreview
                   title="Seller NID & DL Photo"
-                  src={sellerNIDandDLPhoto?.path}
+                  imageUrl={sellerNIDandDLPhoto?.path}
                   alt="Seller NID & DL Photo"
                 />
               </div>
@@ -139,17 +139,17 @@ const BikeItem = (bikeDetails: BikeDetailsType) => {
               <div className="grid md:grid-cols-3 gap-4">
                 <ImagePreview
                   title="Current Photo"
-                  src={currentPhoto?.path}
+                  imageUrl={currentPhoto?.path}
                   alt="Current Bike Photo"
                 />
                 <ImagePreview
                   title="Registration Document"
-                  src={regDocument?.path}
+                  imageUrl={regDocument?.path}
                   alt="Registration Document"
                 />
                 <ImagePreview
                   title="Dealing Video"
-                  src={sellingVideo?.path}
+                  imageUrl={sellingVideo?.path}
                   alt="Dealing Video"
                 />
               </div>

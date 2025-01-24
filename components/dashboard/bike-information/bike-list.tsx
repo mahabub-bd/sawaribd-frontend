@@ -111,9 +111,9 @@ export default function BikeList({ bikedatas }: BikeProps) {
   });
 
   return (
-    <div className="md:p-4 p-4 bg-white shadow-2xl rounded-lg">
+    <div className="md:p-8 p-4 bg-white shadow-2xl rounded-lg">
       {/* Filter Controls */}
-      <div className="flex justify-end my-2">
+      <div className="flex justify-end my-4">
         <BikeAddAction />
       </div>
       <div className="grid md:grid-cols-5 grid-cols-2 gap-2 md:py-2 py-2">

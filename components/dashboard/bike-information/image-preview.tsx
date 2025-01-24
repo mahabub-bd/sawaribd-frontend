@@ -1,29 +1,33 @@
 import Image from "next/image";
 
-const ImagePreview = ({
+export default function ImagePreview({
   title,
-  src,
+  imageUrl,
   alt,
 }: {
   title: string;
-  src: string;
+  imageUrl: string;
   alt: string;
-}) =>
-  src && (
+}) {
+  // Define a placeholder if needed (or fetch dynamically elsewhere)
+  const placeholder = "data:image/png;base64,placeholderValue";
+
+  return (
     <div>
       <h5 className="py-4 text-base font-semibold text-gray-800 text-center">
         {title}
       </h5>
       <div className="border border-slate-100 p-2 rounded-lg">
         <Image
-          src={src}
+          src={imageUrl}
           alt={alt}
           width={400}
           height={300}
           className="rounded-md w-full h-full"
+          placeholder="blur"
+          blurDataURL={placeholder} // Ensure `placeholder` is defined
         />
       </div>
     </div>
   );
-
-export default ImagePreview;
+}

@@ -24,7 +24,6 @@ interface FileUploadProps {
   initialImage?: string | null;
   label?: string;
   supportFormat?: string;
-  accept?: string;
 }
 
 const formSchema = z.object({
@@ -41,6 +40,7 @@ export default function FileUpload({
   initialImage,
   label = "Upload a file",
   supportFormat = "Images, PDF, MP4",
+  
 }: FileUploadProps) {
   const [preview, setPreview] = useState<string | null>(initialImage || null);
   const [fileType, setFileType] = useState<string | null>(null);
@@ -131,6 +131,7 @@ export default function FileUpload({
                         <Input
                           id="file-upload"
                           type="file"
+                          accept="image/*,application/pdf,.pdf,video/mp4"
                           onChange={(event) => {
                             field.onChange(event.target.files);
                             handleFileChange(event.target.files);

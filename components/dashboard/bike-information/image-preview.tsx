@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ImagePreview({
   title,
@@ -18,15 +19,18 @@ export default function ImagePreview({
         {title}
       </h5>
       <div className="border border-slate-100 p-2 rounded-lg">
-        <Image
-          src={imageUrl}
-          alt={alt}
-          width={400}
-          height={300}
-          className="rounded-md w-full h-full"
-          placeholder="blur"
-          blurDataURL={placeholder} // Ensure `placeholder` is defined
-        />
+        <Link href={imageUrl} target="_blank" rel="noopener noreferrer">
+          {/* Wrapping the Image component in a link */}
+          <Image
+            src={imageUrl}
+            alt={alt}
+            width={400}
+            height={300}
+            className="rounded-md w-full h-full"
+            placeholder="blur"
+            blurDataURL={placeholder} // Ensure `placeholder` is defined
+          />
+        </Link>
       </div>
     </div>
   );

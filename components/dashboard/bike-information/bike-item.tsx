@@ -10,6 +10,7 @@ import { formatDate } from "@/utils/helper";
 import ImagePreview from "./image-preview";
 import SectionHeading from "./section-heading";
 import TableRowData from "./table-row-data";
+import VideoPreview from "./video-preview";
 
 const BikeItem = (bikeDetails: BikeDetailsType) => {
   const {
@@ -147,9 +148,11 @@ const BikeItem = (bikeDetails: BikeDetailsType) => {
                   imageUrl={regDocument?.path}
                   alt="Registration Document"
                 />
-                <ImagePreview
+
+                <VideoPreview
+                  poster={currentPhoto?.path}
                   title="Dealing Video"
-                  imageUrl={sellingVideo?.path}
+                  videoUrl={sellingVideo?.path}
                   alt="Dealing Video"
                 />
               </div>

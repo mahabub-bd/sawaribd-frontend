@@ -34,7 +34,7 @@ export const BikeAddAction = () => {
             Fill in the details to add a new bike information.
           </DialogDescription>
         </DialogHeader>
-        {/* <BikeAddForm isOpen={setOpen} /> */}
+
         <BikeAddForm isOpen={setOpen} />
       </DialogContent>
     </Dialog>

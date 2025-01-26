@@ -125,36 +125,53 @@ const BikeItem = (bikeDetails: BikeDetailsType) => {
 
               {/* Photos */}
               <div className="grid md:grid-cols-2 gap-4">
-                <ImagePreview
-                  title="Witness NID Photo"
-                  imageUrl={witnessNIDPhoto?.path}
-                  alt="Witness NID Photo"
-                />
-                <ImagePreview
-                  title="Seller NID & DL Photo"
-                  imageUrl={sellerNIDandDLPhoto?.path}
-                  alt="Seller NID & DL Photo"
-                />
+                {witnessNIDPhoto?.path && (
+                  <ImagePreview
+                    title="Witness NID Photo"
+                    imageUrl={witnessNIDPhoto?.path}
+                    alt="Witness NID Photo"
+                  />
+                )}
+                {sellerNIDandDLPhoto?.path && (
+                  <ImagePreview
+                    title="Seller NID & DL Photo"
+                    imageUrl={sellerNIDandDLPhoto?.path}
+                    alt="Seller NID & DL Photo"
+                  />
+                )}
+                {sellerNIDandDLPhoto?.path && (
+                  <ImagePreview
+                    title="Seller NID & DL Photo"
+                    imageUrl={sellerNIDandDLPhoto?.path}
+                    alt="Seller NID & DL Photo"
+                  />
+                )}
               </div>
 
               <div className="grid md:grid-cols-3 gap-4">
-                <ImagePreview
-                  title="Current Photo"
-                  imageUrl={currentPhoto?.path}
-                  alt="Current Bike Photo"
-                />
-                <ImagePreview
-                  title="Registration Document"
-                  imageUrl={regDocument?.path}
-                  alt="Registration Document"
-                />
+                {currentPhoto?.path && (
+                  <ImagePreview
+                    title="Current Photo"
+                    imageUrl={currentPhoto?.path}
+                    alt="Current Bike Photo"
+                  />
+                )}
+                {regDocument?.path && (
+                  <ImagePreview
+                    title="Registration Document"
+                    imageUrl={regDocument?.path}
+                    alt="Registration Document"
+                  />
+                )}
 
-                <VideoPreview
-                  poster={currentPhoto?.path}
-                  title="Dealing Video"
-                  videoUrl={sellingVideo?.path}
-                  alt="Dealing Video"
-                />
+                {sellingVideo?.path && (
+                  <VideoPreview
+                    poster={currentPhoto?.path}
+                    title="Dealing Video"
+                    videoUrl={sellingVideo?.path}
+                    alt="Dealing Video"
+                  />
+                )}
               </div>
 
               {/* Transaction Details */}

@@ -38,18 +38,6 @@ function timeAgo(date: string) {
   }
 }
 
-const formatDate = (isoString: string) => {
-  const date = new Date(isoString);
-  return date.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-};
-
 function generateSlug(text: string): string {
   return text
     .toLowerCase()
@@ -71,6 +59,25 @@ function tagColor(index: number) {
   ];
 
   return colors[index] || colors[colors.length - 1];
+}
+
+// Add this function to your helper.ts file
+export function formatCurrency(amount: number): string {
+  if (!amount && amount !== 0) return "N/A";
+
+  return `৳${amount.toLocaleString()}`;
+}
+
+// Assuming formatDate is already defined in your helper.ts file
+function formatDate(date: string | Date): string {
+  if (!date) return "N/A";
+
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export { formatDate, generateSlug, tagColor, timeAgo };

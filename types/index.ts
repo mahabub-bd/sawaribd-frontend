@@ -62,7 +62,8 @@ export interface BikeDetailsType {
   witnessPhoneNumber: string;
   witnessNID: number;
   witnessNIDPhoto: Attachment;
-  sellerNIDandDLPhoto: Attachment;
+  sellerNIDPhoto: Attachment;
+  sellerDLPhoto: Attachment;
   keyStatus: number;
   purchaseAmount: number;
   securityAmount: number;

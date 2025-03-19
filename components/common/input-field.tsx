@@ -37,20 +37,13 @@ const InputField: React.FC<InputFieldProps> = ({
       </Label>
       <div className="relative w-full">
         {isTextarea ? (
-          <Textarea
-            id={id}
-            name={name}
-            placeholder={placeholder}
-            rows={rows}
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:outline-none"
-          />
+          <Textarea id={id} name={name} placeholder={placeholder} rows={rows} />
         ) : (
           <Input
             id={id}
             name={name}
             type={showPasswordToggle && showPassword ? "text" : type} // Toggle password visibility
             placeholder={placeholder}
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:outline-none"
           />
         )}
 

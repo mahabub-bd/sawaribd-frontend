@@ -8,7 +8,7 @@ import MobileNavigation from "./mobile-nav";
 export default async function Navbar() {
   const session = await getSession();
   return (
-    <div className="bg-white dark:bg-slate-800 sticky top-0 z-40 shadow-md  md:px-0 px-4">
+    <div className="bg-white  sticky top-0 z-40 shadow-md  md:px-0 px-4">
       <nav className="container mx-auto">
         <div className="flex flex-wrap items-center justify-between w-full">
           <Link href="/dashboard">

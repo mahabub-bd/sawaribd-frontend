@@ -120,7 +120,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
         {/* Engine Number Search */}
         <Input
           type="text"
-          placeholder="Search by Engine Number"
+          placeholder="Engine Number"
           value={engineNumber}
           onChange={(e) => setEngineNumber(e.target.value)}
         />
@@ -128,7 +128,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
         {/* Chassis Number Search */}
         <Input
           type="text"
-          placeholder="Search by Chassis Number"
+          placeholder="Chassis Number"
           value={chassisNumber}
           onChange={(e) => setChassisNumber(e.target.value)}
         />

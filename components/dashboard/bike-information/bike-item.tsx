@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useRef } from "react";
 import { Table, TableBody } from "@/components/ui/table";
 import type { BikeDetailsType } from "@/types";
 import { formatDate, formatCurrency } from "@/utils/helper";
@@ -50,11 +50,6 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   const [activeTab, setActiveTab] = useState("details");
   const printRef = useRef<HTMLDivElement>(null);
 
-  const totalAmount = useMemo(
-    () => (bikeDetails.purchaseAmount || 0) + (bikeDetails.securityAmount || 0),
-    [bikeDetails.purchaseAmount, bikeDetails.securityAmount]
-  );
-
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     if (!isExpanded) setIsExpanded(true);
@@ -84,7 +79,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   }
 
   return (
-    <Card className="overflow-hidden border-muted ">
+    <Card className="overflow-hidden border-muted">
       <CardHeader className="pb-2 space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -363,7 +358,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                 />
                 <VideoPreview
                   poster={bikeDetails.currentPhoto?.path}
-                  title="Dealing Video"
+                  title="Deal / Purchase Video"
                   videoUrl={bikeDetails.sellingVideo?.path}
                   alt="Dealing Video"
                 />
@@ -402,14 +397,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                       </span>
                     }
                   />
-                  <TableRowData
-                    label="Total Amount"
-                    value={
-                      <span className="font-bold text-primary">
-                        {formatCurrency(totalAmount)}
-                      </span>
-                    }
-                  />
+                  {/* Total Amount row removed */}
                 </TableBody>
               </Table>
 
@@ -447,7 +435,15 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
         <div className="text-sm text-muted-foreground">
           ID: {bikeDetails?._id || "N/A"}
         </div>
-        <div className="text-sm font-medium">{formatCurrency(totalAmount)}</div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-green-600">
+            {formatCurrency(bikeDetails.purchaseAmount)}
+          </span>
+          <span className="text-xs text-muted-foreground">+</span>
+          <span className="text-sm font-medium text-blue-600">
+            {formatCurrency(bikeDetails.securityAmount)}
+          </span>
+        </div>
       </CardFooter>
     </Card>
   );

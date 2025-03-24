@@ -125,7 +125,7 @@ const FIELD_CONFIGS = {
     section: "bike",
   },
   sellingVideo: {
-    label: "Selling Video",
+    label: "Deal / Purchase Video",
     supportFormat: "Supported formats: MP4",
     section: "bike",
   },
@@ -146,7 +146,7 @@ const FIELD_LABELS: Record<keyof BikeFormValues, string> = {
   odo: "Odometer Reading",
   regDocument: "Registration Document",
   currentPhoto: "Current Photo",
-  sellingVideo: "Selling Video",
+  sellingVideo: "Deal / Purchase Video",
   witnessName: "Witness Name",
   witnessPhoneNumber: "Witness Phone Number",
   witnessNID: "Witness NID",
@@ -517,7 +517,11 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
               Next <ChevronRight className="h-4 w-4" />
             </Button>
           ) : (
-            <Button type="submit" className="flex items-center gap-2">
+            <Button
+              type="button"
+              onClick={form.handleSubmit(onSubmit)}
+              className="flex items-center gap-2"
+            >
               <CheckCircle2 className="h-4 w-4" /> Save
             </Button>
           )}
@@ -565,7 +569,8 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
       {renderStepIndicators()}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Removed the nested HTML form element and using Form component directly */}
+        <div className="space-y-6">
           {renderStepContent()}
 
           <div className="flex justify-between">
@@ -577,7 +582,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
               Cancel
             </Button>
           </div>
-        </form>
+        </div>
       </Form>
     </div>
   );

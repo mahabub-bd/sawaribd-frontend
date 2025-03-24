@@ -84,7 +84,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   }
 
   return (
-    <Card className="overflow-hidden border-muted shadow-2xl hover:shadow-md transition-shadow duration-200">
+    <Card className="overflow-hidden border-muted ">
       <CardHeader className="pb-2 space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -127,7 +127,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Generate printable PDF (text only)</p>
+                  <p>Generate printable PDF</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -195,7 +195,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
         </div>
         <button
           onClick={toggleAccordion}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors py-4"
         >
           {isExpanded ? (
             <>

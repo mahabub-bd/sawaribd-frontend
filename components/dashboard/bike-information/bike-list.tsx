@@ -111,7 +111,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
   });
 
   return (
-    <div className="md:p-8 p-4 bg-white shadow-2xl rounded-lg">
+    <div className="md:p-4 p-2 bg-white border border-gray-200 shadow-2xl rounded-lg">
       {/* Filter Controls */}
       <div className="flex justify-end my-4">
         <BikeAddAction />
@@ -120,7 +120,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
         {/* Engine Number Search */}
         <Input
           type="text"
-          placeholder="Search by Engine Number"
+          placeholder=" Engine Number"
           value={engineNumber}
           onChange={(e) => setEngineNumber(e.target.value)}
         />
@@ -128,7 +128,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
         {/* Chassis Number Search */}
         <Input
           type="text"
-          placeholder="Search by Chassis Number"
+          placeholder=" Chassis Number"
           value={chassisNumber}
           onChange={(e) => setChassisNumber(e.target.value)}
         />
@@ -192,7 +192,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
         {filteredData && filteredData.length > 0 ? (
           filteredData.map((data) => <BikeItem {...data} key={data._id} />)
         ) : (
-          <p>No bikes found matching the filters.</p>
+          <p className="py-4">No bikes found matching the filters.</p>
         )}
       </div>
     </div>

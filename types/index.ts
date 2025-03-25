@@ -72,6 +72,8 @@ export interface BikeDetailsType {
   currentPhoto: Attachment;
   sellingVideo: Attachment;
   user: User;
+  securityMoneyReturned: boolean;
+  securityMoneyReturnedAt: string;
   createdAt: string;
 }
 export interface Brand {

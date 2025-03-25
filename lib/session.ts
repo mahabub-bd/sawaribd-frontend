@@ -11,6 +11,7 @@ export type Session = {
     name: string;
     email: string;
     role: Role;
+    image?: string;
   };
   accessToken: string;
   refreshToken: string;

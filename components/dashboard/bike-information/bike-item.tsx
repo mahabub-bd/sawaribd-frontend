@@ -155,7 +155,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Generate printable PDF</p>
+                  <p>Generate PDF</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

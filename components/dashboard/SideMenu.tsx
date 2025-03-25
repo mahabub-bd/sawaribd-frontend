@@ -2,6 +2,7 @@ import { adminSidebarMenu } from "@/constants";
 import { getSession } from "@/lib/session";
 import { AdminSidebarMenuItem } from "@/types";
 import CustomLink from "../common/CustomLink";
+import { Card } from "../ui/card";
 
 export default async function SideMenuAbout() {
   const session = await getSession();
@@ -14,7 +15,7 @@ export default async function SideMenuAbout() {
   );
 
   return (
-    <aside className="md:p-8 p-6 bg-white shadow-2xl rounded-lg ">
+    <Card className="md:p-8 p-6 bg-white shadow-2xl rounded-lg ">
       <div className="flex flex-col gap-3">
         {filteredSidebarMenu.map(
           ({ id, title, href, icon }: AdminSidebarMenuItem) => (
@@ -29,6 +30,6 @@ export default async function SideMenuAbout() {
           )
         )}
       </div>
-    </aside>
+    </Card>
   );
 }

@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Table, TableBody } from "@/components/ui/table";
 import type { BikeDetailsType } from "@/types";
-import { formatDate, formatCurrency } from "@/utils/helper";
+import { formatDate, formatCurrency, formatDateTime } from "@/utils/helper";
 import { generateBikePdfContent } from "@/utils/pdfUtils";
 import ImagePreview from "./image-preview";
 import SectionHeading from "./section-heading";
@@ -34,6 +34,7 @@ import {
   AlertCircle,
   Shield,
   CreditCard,
+  CheckCircle,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -46,6 +47,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { patchData } from "@/utils/apiServices";
+import { toast } from "sonner";
+import { serverRevalidate } from "@/utils/revalidatePath";
 
 interface BikeItemProps extends BikeDetailsType {
   isLoading?: boolean;
@@ -54,9 +58,26 @@ interface BikeItemProps extends BikeDetailsType {
 const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
+  const [securityMoneyReturned, setSecurityMoneyReturned] = useState(
+    bikeDetails.securityMoneyReturned
+  );
+
   const printRef = useRef<HTMLDivElement>(null);
 
-  const securityMoneyReturned = bikeDetails.securityMoneyReturned;
+  async function handlesecurityMoneyReturned() {
+    try {
+      await patchData("bike-information", bikeDetails._id, {
+        securityMoneyReturned: !securityMoneyReturned,
+      });
+      toast.success(
+        `Security money ${securityMoneyReturned ? "not returned" : "returned"}`
+      );
+      serverRevalidate("/admin-dashboard/bike-information");
+      setSecurityMoneyReturned(!securityMoneyReturned);
+    } catch (error) {
+      toast.error("Failed to update security money status. Please try again.");
+    }
+  }
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -478,45 +499,61 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                             <TableRowData
                               label="Security Amount"
                               value={
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3">
                                   <span className="font-medium text-blue-600 dark:text-blue-400">
                                     {formatCurrency(bikeDetails.securityAmount)}
                                   </span>
                                   {bikeDetails.securityAmount > 0 && (
-                                    <Badge
-                                      variant={
-                                        securityMoneyReturned
-                                          ? "outline"
-                                          : "destructive"
-                                      }
+                                    <div
+                                      onClick={handlesecurityMoneyReturned}
                                       className={cn(
-                                        "ml-2",
-                                        securityMoneyReturned &&
-                                          "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"
+                                        "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer",
+                                        securityMoneyReturned
+                                          ? "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800 dark:hover:bg-green-900/30"
+                                          : "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/30"
                                       )}
                                     >
-                                      {securityMoneyReturned
-                                        ? "Returned"
-                                        : "Not Returned"}
-                                    </Badge>
+                                      {securityMoneyReturned ? (
+                                        <>
+                                          <Shield className="h-3.5 w-3.5" />
+                                          <span>Returned</span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <AlertCircle className="h-3.5 w-3.5" />
+                                          <span>Not Returned</span>
+                                        </>
+                                      )}
+                                    </div>
                                   )}
                                 </div>
                               }
                             />
-                            {bikeDetails.securityAmount > 0 &&
-                              !securityMoneyReturned && (
-                                <TableRowData
-                                  label="Security Status"
-                                  value={
-                                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                            {bikeDetails.securityAmount > 0 && (
+                              <TableRowData
+                                label="Security Money Status"
+                                value={
+                                  <div
+                                    className={`flex items-center gap-2 ${
+                                      securityMoneyReturned
+                                        ? "text-green-600 dark:text-green-400"
+                                        : "text-amber-600 dark:text-amber-400"
+                                    }`}
+                                  >
+                                    {securityMoneyReturned ? (
+                                      <CheckCircle className="h-4 w-4" />
+                                    ) : (
                                       <AlertCircle className="h-4 w-4" />
-                                      <span className="text-sm">
-                                        Security money pending return
-                                      </span>
-                                    </div>
-                                  }
-                                />
-                              )}
+                                    )}
+                                    <span className="text-sm">
+                                      {securityMoneyReturned
+                                        ? "Return Done"
+                                        : "Pending Return"}
+                                    </span>
+                                  </div>
+                                }
+                              />
+                            )}
                           </TableBody>
                         </Table>
                       </div>
@@ -532,7 +569,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                         <Table>
                           <TableBody>
                             <TableRowData
-                              label="Recorded By"
+                              label="Created By"
                               value={
                                 <div className="flex items-center gap-2">
                                   <User className="h-4 w-4 text-muted-foreground" />
@@ -541,23 +578,36 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                               }
                             />
                             <TableRowData
-                              label="Recorded At"
+                              label="Created At"
                               value={
                                 <div className="flex items-center gap-2">
                                   <Calendar className="h-4 w-4 text-muted-foreground" />
                                   <span>
-                                    {formatDate(bikeDetails.createdAt)}
+                                    {formatDateTime(bikeDetails.createdAt)}
                                   </span>
                                 </div>
                               }
                             />
+
+                            {bikeDetails.updateBy?.name && (
+                              <TableRowData
+                                label="Updated By"
+                                value={
+                                  <div className="flex items-center gap-2">
+                                    <User className="h-4 w-4 text-muted-foreground" />
+                                    <span>{bikeDetails.updateBy?.name}</span>
+                                  </div>
+                                }
+                              />
+                            )}
+
                             <TableRowData
-                              label="Record ID"
+                              label="Updated At"
                               value={
                                 <div className="flex items-center gap-2">
-                                  <FileText className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-xs font-mono">
-                                    {bikeDetails._id}
+                                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                                  <span>
+                                    {formatDateTime(bikeDetails?.updatedAt)}
                                   </span>
                                 </div>
                               }
@@ -578,7 +628,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
         {/* Date information */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4 flex-shrink-0" />
-          <span>{formatDate(bikeDetails.createdAt)}</span>
+          <span>{formatDateTime(bikeDetails.createdAt)}</span>
         </div>
 
         {/* Financial information */}

@@ -11,6 +11,7 @@ const menuIcons = {
   service: "💡",
   messages: "📞",
   users: "👥",
+  activity: "📊",
 };
 
 const adminSidebarMenu: AdminSidebarMenuItem[] = [
@@ -36,6 +37,13 @@ const adminSidebarMenu: AdminSidebarMenuItem[] = [
     href: "/dashboard/users",
     icon: menuIcons.users,
     isAdminMenu: true,
+  },
+  {
+    id: 4,
+    title: "User Activity",
+    href: "/dashboard/user-activity",
+    icon: menuIcons.activity,
+    isAdminMenu: true, // Restricted to admin
   },
 ];
 

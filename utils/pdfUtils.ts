@@ -261,7 +261,7 @@ export const generateBikePdfContent = (bikeDetails: BikeDetailsType) => {
         </div>
 
         <div class="meta-info">
-          <p>Recorded by: ${createdBy?.name || "N/A"} | Date: ${formatDate(
+          <p>Created By: ${createdBy?.name || "N/A"} | Date: ${formatDate(
     createdAt
   )}</p>
           <p>Document ID: <span class="bike-id">${

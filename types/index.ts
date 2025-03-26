@@ -81,3 +81,11 @@ export interface Brand {
   id: string;
   name: string;
 }
+
+export interface UserActivityTypes {
+  _id: string;
+  userId: User;
+  action: string;
+  path?: string;
+  createdAt: string;
+}

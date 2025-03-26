@@ -46,58 +46,82 @@ export default function BikeList({ bikedatas }: BikeProps) {
 
   const getDateFilterRange = (filter: string) => {
     const today = new Date();
+
+    // Set time to start of day (00:00:00)
+    const startOfToday = new Date(today);
+    startOfToday.setHours(0, 0, 0, 0);
+
+    // Set time to end of day (23:59:59.999)
+    const endOfToday = new Date(today);
+    endOfToday.setHours(23, 59, 59, 999);
+
     const startOfWeek = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate() - today.getDay() + 1
     ); // Monday
+    startOfWeek.setHours(0, 0, 0, 0);
+
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
     const startOfYear = new Date(today.getFullYear(), 0, 1);
+    startOfYear.setHours(0, 0, 0, 0);
 
     const startOfLastMonth = new Date(
       today.getFullYear(),
       today.getMonth() - 1,
       1
     );
+    startOfLastMonth.setHours(0, 0, 0, 0);
+
     const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    endOfLastMonth.setHours(23, 59, 59, 999);
 
     const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
+    startOfLastYear.setHours(0, 0, 0, 0);
+
     const endOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
+    endOfLastYear.setHours(23, 59, 59, 999);
 
     const startOfLastWeek = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate() - today.getDay() - 6
     );
+    startOfLastWeek.setHours(0, 0, 0, 0);
+
     const endOfLastWeek = new Date(
       startOfLastWeek.getFullYear(),
       startOfLastWeek.getMonth(),
       startOfLastWeek.getDate() + 6
     );
+    endOfLastWeek.setHours(23, 59, 59, 999);
 
     const sixMonthsAgo = new Date(
       today.getFullYear(),
       today.getMonth() - 6,
       today.getDate()
     );
+    sixMonthsAgo.setHours(0, 0, 0, 0);
 
     switch (filter) {
       case "today":
-        return [new Date(), new Date()];
+        return [startOfToday, endOfToday];
       case "thisWeek":
-        return [startOfWeek, new Date()];
+        return [startOfWeek, endOfToday];
       case "lastWeek":
         return [startOfLastWeek, endOfLastWeek];
       case "thisMonth":
-        return [startOfMonth, new Date()];
+        return [startOfMonth, endOfToday];
       case "lastMonth":
         return [startOfLastMonth, endOfLastMonth];
       case "thisYear":
-        return [startOfYear, new Date()];
+        return [startOfYear, endOfToday];
       case "lastYear":
         return [startOfLastYear, endOfLastYear];
       case "lastSixMonths":
-        return [sixMonthsAgo, new Date()];
+        return [sixMonthsAgo, endOfToday];
       default:
         return null;
     }
@@ -229,6 +253,7 @@ export default function BikeList({ bikedatas }: BikeProps) {
                         <SelectValue placeholder="All Brands" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="all">All Brands</SelectItem>
                         {brands.map((brand: Brand) => (
                           <SelectItem key={brand.id} value={brand.id}>
                             {brand.name}

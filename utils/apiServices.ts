@@ -59,3 +59,8 @@ export async function formPost(endpoint: string, formData: FormData) {
     body: formData,
   });
 }
+
+export async function fetchProtectedData(endpoint: string) {
+  const url = `${endpoint}`;
+  return await protectedApi(url);
+}

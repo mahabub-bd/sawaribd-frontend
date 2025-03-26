@@ -57,7 +57,7 @@ const bikeAddSchema = z.object({
     .int()
     .min(1900)
     .max(new Date().getFullYear()),
-  registrationStatus: z.enum(["On Test", "Registered"]),
+  registrationStatus: z.enum(["OnTest", "Registered"]),
   registrationNumber: z.string().optional(),
   odo: z.coerce
     .number()
@@ -232,7 +232,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
       engineNumber: "",
       chassisNumber: "",
       manufacturingYear: new Date().getFullYear(),
-      registrationStatus: "On Test",
+      registrationStatus: "OnTest",
       registrationNumber: "",
       odo: 0,
       regDocument: "",
@@ -296,7 +296,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                     <SelectValue placeholder={FIELD_PLACEHOLDERS[fieldName]} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="OnTest">On Test</SelectItem>
+                    <SelectItem value="OnTest">OnTest</SelectItem>
                     <SelectItem value="Registered">Registered</SelectItem>
                   </SelectContent>
                 </Select>

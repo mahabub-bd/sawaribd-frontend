@@ -56,7 +56,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   const [activeTab, setActiveTab] = useState("details");
   const printRef = useRef<HTMLDivElement>(null);
 
-  const securityMoneyReturned = bikeDetails.securityMoneyReturned || false;
+  const securityMoneyReturned = bikeDetails.securityMoneyReturned;
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -204,7 +204,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
 
       {isExpanded && (
         <>
-          <div className="px-6 border-t border-border/60">
+          <div className="md:px-4 px-2 border-t border-border/60">
             <Tabs
               defaultValue="details"
               value={activeTab}

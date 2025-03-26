@@ -73,7 +73,9 @@ export interface BikeDetailsType {
   sellingVideo: Attachment;
   user: User;
   securityMoneyReturned: boolean;
-  securityMoneyReturnedAt: string;
+  updateBy: User;
+
+  updatedAt: string;
   createdAt: string;
 }
 export interface Brand {

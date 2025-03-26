@@ -296,7 +296,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                     <SelectValue placeholder={FIELD_PLACEHOLDERS[fieldName]} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="On Test">On Test</SelectItem>
+                    <SelectItem value="OnTest">On Test</SelectItem>
                     <SelectItem value="Registered">Registered</SelectItem>
                   </SelectContent>
                 </Select>

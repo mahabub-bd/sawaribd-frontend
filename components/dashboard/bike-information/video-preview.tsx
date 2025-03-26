@@ -13,7 +13,7 @@ export default function VideoPreview({
 }) {
   return (
     <div>
-      <h5 className="py-4 text-base  text-gray-800 text-center">{title}</h5>
+      <h5 className="py-2 text-base  text-gray-800 text-center">{title}</h5>
       <div className="border border-slate-100 p-2 rounded-lg">
         <video
           controls

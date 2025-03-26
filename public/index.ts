@@ -1,2 +1,2 @@
-import Logo from "./logoswaribd.svg";
+import Logo from "./sawari-logo.svg";
 export { Logo };

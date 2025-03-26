@@ -12,7 +12,7 @@ export default async function Navbar() {
       <nav className="container mx-auto">
         <div className="flex flex-wrap items-center justify-between w-full">
           <Link href="/dashboard">
-            <Image src={Logo} alt="logo" height={100} />
+            <Image src={Logo} alt="logo" height={40} className="py-4" />
           </Link>
 
           <div className="lg:flex hidden gap-4">

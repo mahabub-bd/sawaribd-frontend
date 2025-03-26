@@ -166,14 +166,14 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
         <div className="flex flex-wrap gap-2 mt-3">
           <div className="inline-flex items-center gap-1 bg-muted/40 px-2 py-1 rounded-md text-sm">
             <Key className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="font-medium">Engine:</span>{" "}
+            <span className="font-medium">Engine Number:</span>{" "}
             <span className="text-muted-foreground">
               {bikeDetails.engineNumber}
             </span>
           </div>
           <div className="inline-flex items-center gap-1 bg-muted/40 px-2 py-1 rounded-md text-sm">
             <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="font-medium">Chassis:</span>{" "}
+            <span className="font-medium">Chassis Number:</span>{" "}
             <span className="text-muted-foreground">
               {bikeDetails.chassisNumber}
             </span>
@@ -190,7 +190,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
           {bikeDetails.securityAmount > 0 && (
             <div className="inline-flex items-center gap-1 bg-muted/40 px-2 py-1 rounded-md text-sm">
               <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="font-medium">Security:</span>{" "}
+              <span className="font-medium">Security Money:</span>{" "}
               <Badge
                 variant={securityMoneyReturned ? "default" : "destructive"}
                 className="ml-1 text-xs"

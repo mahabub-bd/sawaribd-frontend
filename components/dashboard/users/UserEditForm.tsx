@@ -1,9 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -16,11 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User } from "@/types";
+import type { User } from "@/types";
 import { patchData } from "@/utils/apiServices";
 import { serverRevalidate } from "@/utils/revalidatePath";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -38,7 +41,6 @@ const userEditSchema = z.object({
     .string()
     .email({ message: "Please enter a valid email address." })
     .trim(),
-
   role: z.enum(["user", "admin", "moderator"], {
     required_error: "Role is required.",
   }),
@@ -56,8 +58,7 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
     defaultValues: {
       name: user.name,
       email: user.email,
-
-      role: undefined,
+      role: user.role as "user" | "admin" | "moderator",
     },
   });
 
@@ -84,6 +85,7 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
           name="name"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input type="text" placeholder={placeholders.name} {...field} />
               </FormControl>
@@ -91,12 +93,14 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
             </FormItem>
           )}
         />
+
         {/* Email Field */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -115,12 +119,10 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
           name="role"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Role</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value} // Ensure proper handling of the value
-                >
-                  <SelectTrigger>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select User Role" />
                   </SelectTrigger>
                   <SelectContent>
@@ -137,21 +139,13 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
             </FormItem>
           )}
         />
+
         {/* Action Buttons */}
-        <div className="flex justify-between gap-10">
-          <Button
-            onClick={() => isOpen(false)}
-            type="button"
-            className="w-1/2 bg-gray-200 text-gray-700 hover:bg-gray-300"
-          >
+        <div className="flex justify-end gap-3 pt-2">
+          <Button onClick={() => isOpen(false)} type="button" variant="outline">
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="w-1/2 bg-primary text-white hover:bg-primary-dark"
-          >
-            Update
-          </Button>
+          <Button type="submit">Update User</Button>
         </div>
       </form>
     </Form>

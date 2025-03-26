@@ -1,64 +1,62 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
+import { type ReactNode, useState } from "react"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Trash, TriangleAlertIcon, X } from "lucide-react";
-import { useState } from "react";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface ConfirmDeleteProps {
-  title?: string;
-  description?: string;
-  onConfirm: () => Promise<void> | void;
-  trigger: React.ReactNode;
+  title: string
+  description: string
+  onConfirm: () => Promise<void>
+  trigger: ReactNode
 }
 
-export default function ConfirmDelete({
-  title = "Confirm Delete",
-  description = "Are you sure you want to delete this item? This action cannot be undone.",
-  onConfirm,
-  trigger,
-}: ConfirmDeleteProps) {
-  const [open, setOpen] = useState(false);
+export default function ConfirmDelete({ title, description, onConfirm, trigger }: ConfirmDeleteProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleConfirm = async () => {
+    setIsLoading(true)
     try {
-      await onConfirm();
-      setOpen(false);
-    } catch (error) {
-      console.error("Error during confirmation action:", error);
+      await onConfirm()
+    } finally {
+      setIsLoading(false)
+      setIsOpen(false)
     }
-  };
+  }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
-        <DialogHeader className="flex flex-col gap-5 items-center justify-center">
-          <div className="bg-red-100 p-4 rounded-full">
-            <TriangleAlertIcon color="red" size={40} />
-          </div>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex justify-end gap-4">
-          <Button variant="outline" onClick={() => setOpen(false)}>
-            <X className="mr-2 h-4 w-4" />
-            Cancel
-          </Button>
-          <Button variant="destructive" onClick={handleConfirm}>
-            <Trash className="mr-2 h-4 w-4" />
-            Confirm
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={(e) => {
+              e.preventDefault()
+              handleConfirm()
+            }}
+            disabled={isLoading}
+            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+          >
+            {isLoading ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
 }
+

@@ -4,6 +4,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -56,10 +57,14 @@ export default function UserAddForm({ isOpen }: UserAddFormProps) {
   const onSubmit: SubmitHandler<z.infer<typeof userAddSchema>> = async (
     values
   ) => {
-    await postData("users", values);
-    toast.success("User added successfully");
-    serverRevalidate("/admin-dashboard/users");
-    isOpen(false);
+    try {
+      await postData("users", values);
+      toast.success("User added successfully");
+      serverRevalidate("/admin-dashboard/users");
+      isOpen(false);
+    } catch (error) {
+      toast.error("Failed to add user. Please try again.");
+    }
   };
 
   return (
@@ -71,6 +76,7 @@ export default function UserAddForm({ isOpen }: UserAddFormProps) {
           name="name"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input type="text" placeholder={placeholders.name} {...field} />
               </FormControl>
@@ -78,12 +84,14 @@ export default function UserAddForm({ isOpen }: UserAddFormProps) {
             </FormItem>
           )}
         />
+
         {/* Email Field */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -95,12 +103,14 @@ export default function UserAddForm({ isOpen }: UserAddFormProps) {
             </FormItem>
           )}
         />
+
         {/* Password Field */}
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -112,21 +122,22 @@ export default function UserAddForm({ isOpen }: UserAddFormProps) {
             </FormItem>
           )}
         />
+
         {/* Role Field */}
         <FormField
           control={form.control}
           name="role"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Role</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className="">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select User Role" />
                   </SelectTrigger>
-
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>User Role</SelectLabel>
@@ -141,21 +152,13 @@ export default function UserAddForm({ isOpen }: UserAddFormProps) {
             </FormItem>
           )}
         />
+
         {/* Action Buttons */}
-        <div className="flex justify-between gap-10">
-          <Button
-            onClick={() => isOpen(false)}
-            type="button"
-            className="w-1/2 bg-gray-200 text-gray-700 hover:bg-gray-300"
-          >
+        <div className="flex justify-end gap-3 pt-2">
+          <Button onClick={() => isOpen(false)} type="button" variant="outline">
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="w-1/2 bg-primary text-white hover:bg-primary-dark"
-          >
-            Save
-          </Button>
+          <Button type="submit">Add User</Button>
         </div>
       </form>
     </Form>

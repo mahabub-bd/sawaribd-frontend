@@ -13,15 +13,13 @@ export default function VideoPreview({
 }) {
   return (
     <div>
-      <h5 className="py-4 text-base font-semibold text-gray-800 text-center">
-        {title}
-      </h5>
+      <h5 className="py-4 text-base  text-gray-800 text-center">{title}</h5>
       <div className="border border-slate-100 p-2 rounded-lg">
         <video
-          controls // Adds playback controls like play, pause, volume
-          poster={poster} // Placeholder image before video starts
+          controls
+          poster={poster}
           className="rounded-md w-full h-auto"
-          preload="metadata" // Loads video metadata for quick playback
+          preload="metadata"
         >
           <source src={videoUrl} type="video/mp4" />
           <p>

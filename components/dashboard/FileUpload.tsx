@@ -27,6 +27,7 @@ import {
   VideoIcon,
   XIcon,
   RefreshCwIcon,
+  ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,6 +38,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 interface FileUploadProps {
   onUploadSuccess: (attachmentId: string) => void;
@@ -69,6 +71,8 @@ export default function FileUpload({
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -91,6 +95,11 @@ export default function FileUpload({
         setPreview(null); // No preview for unsupported types
       }
 
+      // Reset states
+      setUploadSuccess(false);
+      setShowSuccessMessage(false);
+      setUploadProgress(0);
+
       // Auto-upload when file is selected
       handleUpload(file);
     } else {
@@ -110,6 +119,8 @@ export default function FileUpload({
     setFileName(null);
     form.setValue("file", null as unknown as FileList);
     setUploadSuccess(false);
+    setShowSuccessMessage(false);
+    setUploadProgress(0);
 
     // Clear the file input
     if (fileInputRef.current) {
@@ -120,20 +131,41 @@ export default function FileUpload({
   const handleUpload = async (file: File) => {
     setIsUploading(true);
     setUploadSuccess(false);
+    setShowSuccessMessage(false);
+    setUploadProgress(0);
+
     const formData = new FormData();
     formData.append("file", file);
 
     try {
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          const newProgress = prev + Math.random() * 15;
+          return newProgress >= 95 ? 95 : newProgress;
+        });
+      }, 300);
+
       const response = await formPost("uploads", formData);
       const fileId = response?.fileData?._id || null;
 
-      onUploadSuccess(fileId);
+      clearInterval(progressInterval);
+      setUploadProgress(100);
 
+      onUploadSuccess(fileId);
       setUploadSuccess(true);
+      setShowSuccessMessage(true);
+
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
+
       toast.success("File uploaded successfully.");
     } catch (error) {
       console.error("File upload error:", error);
       toast.error("Failed to upload file.");
+      setUploadProgress(0);
     } finally {
       setIsUploading(false);
     }
@@ -161,7 +193,7 @@ export default function FileUpload({
     if (!fileType) return <FileIcon className="h-6 w-6 text-gray-400" />;
 
     if (fileType.startsWith("image/")) {
-      return <FileIcon className="h-6 w-6 text-blue-500" />;
+      return <ImageIcon className="h-6 w-6 text-blue-500" />;
     } else if (fileType === "application/pdf") {
       return <FileTextIcon className="h-6 w-6 text-red-500" />;
     } else if (fileType === "video/mp4") {
@@ -204,11 +236,11 @@ export default function FileUpload({
                       {!preview && !isUploading && !uploadSuccess && (
                         <div
                           onClick={handleBrowseClick}
-                          className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-3 hover:border-primary hover:bg-accent/50 transition-colors"
+                          className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 hover:border-primary hover:bg-accent/50 transition-colors"
                         >
                           <UploadIcon
-                            size={18}
-                            className="text-muted-foreground mb-1"
+                            size={24}
+                            className="text-muted-foreground mb-2"
                           />
                           <span className="text-sm font-medium">
                             Click to upload
@@ -219,17 +251,41 @@ export default function FileUpload({
                         </div>
                       )}
 
-                      {/* Loading state */}
+                      {/* Loading state with progress bar */}
                       {isUploading && (
-                        <div className="flex items-center justify-center p-3 border rounded-lg bg-accent/30">
-                          <Loader2Icon className="animate-spin h-5 w-5 text-primary mr-2" />
-                          <span className="text-sm">Uploading...</span>
+                        <div className="flex flex-col space-y-2 p-3 border rounded-lg bg-accent/30">
+                          <div className="flex items-center">
+                            <Loader2Icon className="animate-spin h-5 w-5 text-primary mr-2" />
+                            <span className="text-sm">Uploading...</span>
+                          </div>
+                          <Progress value={uploadProgress} className="h-2" />
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>{fileName}</span>
+                            <span>{Math.round(uploadProgress)}%</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Success message */}
+                      {showSuccessMessage && (
+                        <div className="flex items-center justify-center p-3 border rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 transition-all duration-300 animate-in fade-in">
+                          <CheckIcon className="h-5 w-5 mr-2" />
+                          <span className="text-sm font-medium">
+                            Upload complete!
+                          </span>
                         </div>
                       )}
 
                       {/* Preview area */}
                       {(preview || (uploadSuccess && fileName)) && (
-                        <div className="relative border rounded-lg overflow-hidden">
+                        <div
+                          className={cn(
+                            "relative border rounded-lg overflow-hidden transition-all duration-300",
+                            uploadSuccess
+                              ? "border-green-200 dark:border-green-800"
+                              : "border-border"
+                          )}
+                        >
                           {/* Preview content */}
                           <div className="flex items-center p-2">
                             {fileType?.startsWith("image/") && preview ? (
@@ -266,12 +322,12 @@ export default function FileUpload({
 
                             {/* Success indicator */}
                             {uploadSuccess && (
-                              <div className="absolute top-1 right-1">
+                              <div className="absolute top-2 right-10">
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <div className="bg-green-100 text-green-600 p-1 rounded-full">
-                                        <CheckIcon size={14} />
+                                      <div className="bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 p-1.5 rounded-full">
+                                        <CheckIcon size={16} />
                                       </div>
                                     </TooltipTrigger>
                                     <TooltipContent>
@@ -284,7 +340,7 @@ export default function FileUpload({
                           </div>
 
                           {/* Action buttons */}
-                          <div className="absolute top-1 right-1 flex space-x-1">
+                          <div className="absolute top-2 right-2 flex space-x-1">
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -292,7 +348,7 @@ export default function FileUpload({
                                     type="button"
                                     variant="destructive"
                                     size="icon"
-                                    className="h-6 w-6"
+                                    className="h-7 w-7"
                                     onClick={handleDeletePreview}
                                   >
                                     <XIcon size={14} />
@@ -311,7 +367,7 @@ export default function FileUpload({
                                     type="button"
                                     variant="outline"
                                     size="icon"
-                                    className="h-6 w-6"
+                                    className="h-7 w-7"
                                     onClick={handleBrowseClick}
                                   >
                                     <RefreshCwIcon size={14} />

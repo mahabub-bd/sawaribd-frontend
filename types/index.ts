@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 export enum Role {
   User = "user",
   Admin = "admin",
@@ -88,4 +90,5 @@ export interface UserActivityTypes {
   action: string;
   path?: string;
   createdAt: string;
+  actionIcon: JSX.Element;
 }

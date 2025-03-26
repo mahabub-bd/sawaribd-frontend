@@ -82,7 +82,7 @@ const bikeAddSchema = z.object({
     .positive("Purchase amount must be positive."),
   securityAmount: z.coerce
     .number()
-    .positive("Security amount must be positive."),
+    .nonnegative("Security amount must be 0 or positive."),
   remarks: z.string().optional(),
 });
 

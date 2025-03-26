@@ -32,6 +32,8 @@ import {
   Tag,
   Info,
   AlertCircle,
+  Shield,
+  CreditCard,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -54,7 +56,6 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   const [activeTab, setActiveTab] = useState("details");
   const printRef = useRef<HTMLDivElement>(null);
 
-  // Default security money return status is "not returned"
   const securityMoneyReturned = bikeDetails.securityMoneyReturned || false;
 
   const handleTabChange = (value: string) => {
@@ -573,29 +574,70 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
         </>
       )}
 
-      <CardFooter className="flex justify-between py-3 px-6 border-t bg-muted/5">
+      <CardFooter className="flex flex-col sm:flex-row sm:justify-between gap-3 py-4 px-6 border-t bg-card/5">
+        {/* Date information */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4" />
+          <Calendar className="h-4 w-4 flex-shrink-0" />
           <span>{formatDate(bikeDetails.createdAt)}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-green-600 dark:text-green-400">
-            {formatCurrency(bikeDetails.purchaseAmount)}
-          </span>
-          <span className="text-xs text-muted-foreground">+</span>
-          <span
-            className={cn(
-              "text-sm font-medium",
-              securityMoneyReturned
-                ? "text-blue-600 dark:text-blue-400"
-                : "text-blue-600 dark:text-blue-400 flex items-center gap-1"
-            )}
-          >
-            {formatCurrency(bikeDetails.securityAmount)}
-            {!securityMoneyReturned && bikeDetails.securityAmount > 0 && (
-              <span className="inline-flex h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-            )}
-          </span>
+
+        {/* Financial information */}
+        <div className="flex flex-wrap items-center gap-3">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-2 py-1.5 px-3 border-green-200 bg-green-50 dark:bg-green-950/30 dark:border-green-800"
+                >
+                  <CreditCard className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                  <span className="font-medium text-green-700 dark:text-green-400">
+                    {formatCurrency(bikeDetails.purchaseAmount)}
+                  </span>
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <p>Purchase Amount</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          {bikeDetails.securityAmount > 0 && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "flex items-center gap-2 py-1.5 px-3",
+                      securityMoneyReturned
+                        ? "border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800"
+                        : "border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800"
+                    )}
+                  >
+                    <Shield className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                    <span className="font-medium text-blue-700 dark:text-blue-400">
+                      {formatCurrency(bikeDetails.securityAmount)}
+                    </span>
+                    {!securityMoneyReturned &&
+                      bikeDetails.securityAmount > 0 && (
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping"></span>
+                          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                        </span>
+                      )}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <p>
+                    {securityMoneyReturned
+                      ? "Security Deposit (Returned)"
+                      : "Security Deposit (Pending)"}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </CardFooter>
     </Card>

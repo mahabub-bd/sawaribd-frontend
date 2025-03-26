@@ -74,7 +74,6 @@ export interface BikeDetailsType {
   createdBy: User;
   securityMoneyReturned: boolean;
   updateBy: User;
-
   updatedAt: string;
   createdAt: string;
 }

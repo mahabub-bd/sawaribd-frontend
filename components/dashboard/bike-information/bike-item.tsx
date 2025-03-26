@@ -536,7 +536,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                               value={
                                 <div className="flex items-center gap-2">
                                   <User className="h-4 w-4 text-muted-foreground" />
-                                  <span>{bikeDetails.user?.name}</span>
+                                  <span>{bikeDetails.createdBy?.name}</span>
                                 </div>
                               }
                             />

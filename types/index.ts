@@ -71,7 +71,7 @@ export interface BikeDetailsType {
   regDocument: Attachment;
   currentPhoto: Attachment;
   sellingVideo: Attachment;
-  user: User;
+  createdBy: User;
   securityMoneyReturned: boolean;
   updateBy: User;
 

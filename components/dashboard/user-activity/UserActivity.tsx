@@ -23,13 +23,13 @@ import {
 } from "lucide-react";
 import { Suspense } from "react";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserActivityTabs } from "./user-activity-client";
+import { UserActivityTabs } from "./UserActivityTabs";
 
 // Function to get icon based on action type
 const getActionIcon = (action: string) => {
   const actionLower = action.toLowerCase();
 
-  if (actionLower.includes("signin") || actionLower.includes("login")) {
+  if (actionLower.includes("sign in") || actionLower.includes("login")) {
     return <LogIn className="h-4 w-4 text-green-500" />;
   } else if (
     actionLower.includes("logout") ||
@@ -145,7 +145,7 @@ export default async function UserActivity({
         <UserActivityTabs defaultValue={filter}>
           <TabsList>
             <TabsTrigger value="all">All Activities</TabsTrigger>
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
+            <TabsTrigger value="sign in">Sign In</TabsTrigger>
             <TabsTrigger value="data">Data Changes</TabsTrigger>
             <TabsTrigger value="system">System</TabsTrigger>
           </TabsList>
@@ -154,7 +154,7 @@ export default async function UserActivity({
             {renderActivityTable(userActivities.data)}
           </TabsContent>
 
-          <TabsContent value="signin" className="m-0">
+          <TabsContent value="sign in" className="m-0">
             {renderActivityTable(userActivities.data)}
           </TabsContent>
 
@@ -167,18 +167,7 @@ export default async function UserActivity({
           </TabsContent>
         </UserActivityTabs>
 
-        <div className="flex justify-between items-center gap-2 mt-4 text-sm text-muted-foreground">
-          <div>
-            Showing
-            <span className="font-medium text-foreground mx-1">
-              {limitNumber}
-            </span>
-            out of
-            <span className="font-medium text-foreground mx-1">
-              {userActivities?.total}
-            </span>
-            activities
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 mt-4 text-sm text-muted-foreground">
           <PaginationComponent
             currentPage={pageNumber}
             totalPages={userActivities.totalPages}

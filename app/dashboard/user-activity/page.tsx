@@ -22,17 +22,18 @@ import {
   Trash2,
 } from "lucide-react";
 import { Suspense } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserActivityTabs } from "@/components/dashboard/user-activity/UserActivityTabs";
 
 // Function to get icon based on action type
 const getActionIcon = (action: string) => {
   const actionLower = action.toLowerCase();
 
-  if (actionLower.includes("signin") || actionLower.includes("login")) {
+  if (actionLower.includes("sign in") || actionLower.includes("login")) {
     return <LogIn className="h-4 w-4 text-green-500" />;
   } else if (
-    actionLower.includes("logout") ||
-    actionLower.includes("signout")
+    actionLower.includes("sign out") ||
+    actionLower.includes("logout")
   ) {
     return <LogOut className="h-4 w-4 text-orange-500" />;
   } else if (actionLower.includes("update") || actionLower.includes("edit")) {
@@ -48,6 +49,21 @@ const getActionIcon = (action: string) => {
   }
 };
 
+// Standardize action names for display
+const formatActionName = (action: string): string => {
+  const actionLower = action.toLowerCase();
+
+  if (actionLower.includes("login") || actionLower.includes("signin")) {
+    return "Sign In";
+  }
+  if (actionLower.includes("logout") || actionLower.includes("signout")) {
+    return "Sign Out";
+  }
+
+  // Capitalize first letter of other actions
+  return action.charAt(0).toUpperCase() + action.slice(1);
+};
+
 // Helper function to filter activities by type
 const filterActivities = (
   activities: UserActivityTypes[],
@@ -58,8 +74,13 @@ const filterActivities = (
   return activities.filter((activity) => {
     const actionLower = activity.action.toLowerCase();
 
-    if (filterType === "signin") {
-      return actionLower.includes("signin") || actionLower.includes("login");
+    if (filterType === "sign in") {
+      return (
+        actionLower.includes("sign in") ||
+        actionLower.includes("signin") ||
+        actionLower.includes("sign out") ||
+        actionLower.includes("signout")
+      );
     } else if (filterType === "data") {
       return (
         actionLower.includes("update") ||
@@ -80,27 +101,38 @@ const filterActivities = (
 export default async function UserActivity({
   searchParams,
 }: {
-  searchParams: Promise<{ page: string; limit: string; filter?: string }>;
+  searchParams: Promise<{ page?: string; limit?: string; filter?: string }>;
 }) {
-  const { page, limit, filter = "all" } = await searchParams;
+  const { page = "1", limit = "10", filter = "all" } = await searchParams;
 
   const pageNumber = Number.parseInt(page) || 1;
   const limitNumber = Number.parseInt(limit) || 10;
 
+  // Fetch all activities
   const userActivities = await fetchProtectedData(
     `user-activity?page=${pageNumber}&limit=${limitNumber}`
   );
 
-  if (!userActivities || userActivities.length === 0) {
+  if (
+    !userActivities ||
+    !userActivities.data ||
+    userActivities.data.length === 0
+  ) {
     return (
       <ErrorFallback message="No user activities available at the moment." />
     );
   }
 
+  // Process activities to standardize action names
+  const processedActivities = userActivities.data.map(
+    (activity: UserActivityTypes) => ({
+      ...activity,
+      action: formatActionName(activity.action),
+    })
+  );
+
   // Create filtered datasets for each tab
-  const signinActivities = filterActivities(userActivities.data, "signin");
-  const dataActivities = filterActivities(userActivities.data, "data");
-  const systemActivities = filterActivities(userActivities.data, "system");
+  const filteredActivities = filterActivities(processedActivities, filter);
 
   // Function to render activity table
   const renderActivityTable = (activities: UserActivityTypes[]) => {
@@ -174,43 +206,44 @@ export default async function UserActivity({
       </CardHeader>
 
       <CardContent>
-        <Tabs defaultValue={filter} className="w-full mb-6">
+        <UserActivityTabs defaultValue={filter}>
           <TabsList>
             <TabsTrigger value="all">All Activities</TabsTrigger>
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
+            <TabsTrigger value="sign in">Sign In</TabsTrigger>
             <TabsTrigger value="data">Data Changes</TabsTrigger>
             <TabsTrigger value="system">System</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all" className="m-0">
-            {renderActivityTable(userActivities.data)}
+            {renderActivityTable(processedActivities)}
           </TabsContent>
 
-          <TabsContent value="signin" className="m-0">
-            {renderActivityTable(signinActivities)}
+          <TabsContent value="sign in" className="m-0">
+            {renderActivityTable(
+              filterActivities(processedActivities, "sign in")
+            )}
           </TabsContent>
 
           <TabsContent value="data" className="m-0">
-            {renderActivityTable(dataActivities)}
+            {renderActivityTable(filterActivities(processedActivities, "data"))}
           </TabsContent>
 
           <TabsContent value="system" className="m-0">
-            {renderActivityTable(systemActivities)}
+            {renderActivityTable(
+              filterActivities(processedActivities, "system")
+            )}
           </TabsContent>
-        </Tabs>
+        </UserActivityTabs>
 
-        <div className="flex flex-col items-center gap-4 mt-4 text-sm">
-          <div className="text-center text-muted-foreground">
-            Showing
-            <span className="font-medium text-foreground mx-1">
-              {limitNumber}
-            </span>
-            out of
-            <span className="font-medium text-foreground mx-1">
+        <div className="flex flex-wrap items-center justify-between gap-2 mt-4 text-sm text-muted-foreground">
+          <span>
+            Showing{" "}
+            <strong className="text-foreground mx-1">{limitNumber}</strong> of{" "}
+            <strong className="text-foreground mx-1">
               {userActivities?.total}
-            </span>
+            </strong>{" "}
             activities
-          </div>
+          </span>
           <PaginationComponent
             currentPage={pageNumber}
             totalPages={userActivities.totalPages}

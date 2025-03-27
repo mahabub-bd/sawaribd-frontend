@@ -35,6 +35,7 @@ import {
   Shield,
   CreditCard,
   CheckCircle,
+  Wallet,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -56,9 +57,9 @@ interface BikeItemProps extends BikeDetailsType {
 }
 
 const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState("details");
-  const [securityMoneyReturned, setSecurityMoneyReturned] = useState(
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("details");
+  const [securityMoneyReturned, setSecurityMoneyReturned] = useState<boolean>(
     bikeDetails.securityMoneyReturned
   );
 
@@ -497,6 +498,17 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                               }
                             />
                             <TableRowData
+                              label="Paid Amount"
+                              value={
+                                <span className="font-medium text-purple-600 dark:text-purple-400">
+                                  {formatCurrency(
+                                    bikeDetails.purchaseAmount -
+                                      bikeDetails.securityAmount
+                                  )}
+                                </span>
+                              }
+                            />
+                            <TableRowData
                               label="Security Amount"
                               value={
                                 <div className="flex items-center gap-3">
@@ -633,6 +645,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
 
         {/* Financial information */}
         <div className="flex flex-wrap items-center gap-3">
+          {/* Purchase Amount Badge (original) */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -652,6 +665,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
             </Tooltip>
           </TooltipProvider>
 
+          {/* Security Amount Badge (original with improvements) */}
           {bikeDetails.securityAmount > 0 && (
             <TooltipProvider>
               <Tooltip>
@@ -669,13 +683,12 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                     <span className="font-medium text-blue-700 dark:text-blue-400">
                       {formatCurrency(bikeDetails.securityAmount)}
                     </span>
-                    {!securityMoneyReturned &&
-                      bikeDetails.securityAmount > 0 && (
-                        <span className="relative flex h-2.5 w-2.5">
-                          <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping"></span>
-                          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
-                        </span>
-                      )}
+                    {!securityMoneyReturned && (
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping"></span>
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                      </span>
+                    )}
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent side="top">
@@ -688,6 +701,27 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
               </Tooltip>
             </TooltipProvider>
           )}
+          {/* Paid Amount Badge */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-2 py-1.5 px-3 border-purple-200 bg-purple-50 dark:bg-purple-950/30 dark:border-purple-800"
+                >
+                  <Wallet className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                  <span className="font-medium text-purple-700 dark:text-purple-400">
+                    {formatCurrency(
+                      bikeDetails.purchaseAmount - bikeDetails.securityAmount
+                    )}
+                  </span>
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <p>Paid Amount </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </CardFooter>
     </Card>

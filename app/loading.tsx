@@ -1,69 +1,33 @@
+"use client"
+
 export default function Loading() {
   return (
-    <div className="flex items-center justify-center h-screen ">
-      <svg
-        className="h-10 w-10 animate-spin text-gray-900 dark:text-gray-50"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M12 4.75V6.25"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M17.1475 6.8525L16.0625 7.9375"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M19.25 12H17.75"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M17.1475 17.1475L16.0625 16.0625"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M12 17.75V19.25"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M6.8525 17.1475L7.9375 16.0625"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M4.75 12H6.25"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M6.8525 6.8525L7.9375 7.9375"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="relative w-64 h-4 bg-muted overflow-hidden rounded-full">
+        <div className="absolute top-0 left-0 h-full w-1/2 bg-primary rounded-full animate-pulse"></div>
+        <div className="absolute top-0 left-0 h-full w-full animate-shimmer">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-3 gap-2">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="w-3 h-3 rounded-full bg-primary animate-bounce"
+            style={{
+              animationDelay: `${i * 0.15}s`,
+              animationDuration: "0.8s",
+            }}
+          ></div>
+        ))}
+      </div>
+
+      <p className="mt-6 text-sm font-medium text-muted-foreground">Loading your experience</p>
     </div>
-  );
+  )
 }
+
+
+
+

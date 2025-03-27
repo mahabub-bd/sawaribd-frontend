@@ -89,6 +89,8 @@ const formatDateTime = (isoString: string) => {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
+    timeZone: "Asia/Dhaka", // GMT+6
   });
 };
+
 export { formatDate, generateSlug, tagColor, timeAgo, formatDateTime };

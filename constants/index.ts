@@ -58,7 +58,6 @@ const menuItems: MenuItem[] = [
 ];
 
 const brands: Brand[] = [
-  { id: "all", name: "All Brands" },
   { id: "honda", name: "Honda" },
   { id: "yamaha", name: "Yamaha" },
   { id: "suzuki", name: "Suzuki" },

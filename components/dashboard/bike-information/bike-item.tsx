@@ -119,7 +119,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
             <div className="bg-primary/10 p-2 rounded-md">
               <Bike className="h-5 w-5 text-primary" />
             </div>
-            <div>
+            <div className="flex flex-col py-4">
               <CardTitle className="text-lg capitalize flex items-center gap-2">
                 {`${bikeDetails.bikeBrand} ${bikeDetails.bikeModel}`}
                 <Badge
@@ -133,12 +133,6 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                   {bikeDetails.registrationStatus}
                 </Badge>
               </CardTitle>
-              <CardDescription className="mt-1 text-sm">
-                <span className="inline-flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" />
-                  {formatDate(bikeDetails.createdAt)}
-                </span>
-              </CardDescription>
             </div>
           </div>
 

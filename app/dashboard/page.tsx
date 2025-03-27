@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { CopyButton } from "@/components/dashboard/copy-button";
 import { fetchProtectedData } from "@/utils/apiServices";
+import { formatDateTime } from "@/utils/helper";
 
 // Define the activity type based on the actual API response
 interface UserActivity {
@@ -93,18 +94,6 @@ const AdminDashboard = async () => {
     activityError =
       error instanceof Error ? error.message : "Failed to load activity data";
   }
-
-  // Format date for display
-  const formatActivityDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    }).format(date);
-  };
 
   // Get action color and icon based on action type
   const getActionInfo = (action: string) => {
@@ -303,7 +292,7 @@ const AdminDashboard = async () => {
                           <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {activity.createdAt
-                              ? formatActivityDate(activity.createdAt)
+                              ? formatDateTime(activity.createdAt)
                               : "Unknown time"}
                           </span>
                         </div>

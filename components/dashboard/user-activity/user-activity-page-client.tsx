@@ -22,7 +22,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { Suspense } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserActivityTabs } from "./user-activity-client";
 
 // Function to get icon based on action type
 const getActionIcon = (action: string) => {
@@ -48,35 +49,6 @@ const getActionIcon = (action: string) => {
   }
 };
 
-// Helper function to filter activities by type
-const filterActivities = (
-  activities: UserActivityTypes[],
-  filterType: string
-) => {
-  if (filterType === "all") return activities;
-
-  return activities.filter((activity) => {
-    const actionLower = activity.action.toLowerCase();
-
-    if (filterType === "signin") {
-      return actionLower.includes("signin") || actionLower.includes("login");
-    } else if (filterType === "data") {
-      return (
-        actionLower.includes("update") ||
-        actionLower.includes("edit") ||
-        actionLower.includes("create") ||
-        actionLower.includes("add") ||
-        actionLower.includes("delete") ||
-        actionLower.includes("remove")
-      );
-    } else if (filterType === "system") {
-      return actionLower.includes("system") || actionLower.includes("config");
-    }
-
-    return false;
-  });
-};
-
 export default async function UserActivity({
   searchParams,
 }: {
@@ -87,8 +59,9 @@ export default async function UserActivity({
   const pageNumber = Number.parseInt(page) || 1;
   const limitNumber = Number.parseInt(limit) || 10;
 
+  // Fetch activities with filter parameter
   const userActivities = await fetchProtectedData(
-    `user-activity?page=${pageNumber}&limit=${limitNumber}`
+    `user-activity?page=${pageNumber}&limit=${limitNumber}&filter=${filter}`
   );
 
   if (!userActivities || userActivities.length === 0) {
@@ -96,11 +69,6 @@ export default async function UserActivity({
       <ErrorFallback message="No user activities available at the moment." />
     );
   }
-
-  // Create filtered datasets for each tab
-  const signinActivities = filterActivities(userActivities.data, "signin");
-  const dataActivities = filterActivities(userActivities.data, "data");
-  const systemActivities = filterActivities(userActivities.data, "system");
 
   // Function to render activity table
   const renderActivityTable = (activities: UserActivityTypes[]) => {
@@ -174,7 +142,7 @@ export default async function UserActivity({
       </CardHeader>
 
       <CardContent>
-        <Tabs defaultValue={filter} className="w-full mb-6">
+        <UserActivityTabs defaultValue={filter}>
           <TabsList>
             <TabsTrigger value="all">All Activities</TabsTrigger>
             <TabsTrigger value="signin">Sign In</TabsTrigger>
@@ -187,20 +155,20 @@ export default async function UserActivity({
           </TabsContent>
 
           <TabsContent value="signin" className="m-0">
-            {renderActivityTable(signinActivities)}
+            {renderActivityTable(userActivities.data)}
           </TabsContent>
 
           <TabsContent value="data" className="m-0">
-            {renderActivityTable(dataActivities)}
+            {renderActivityTable(userActivities.data)}
           </TabsContent>
 
           <TabsContent value="system" className="m-0">
-            {renderActivityTable(systemActivities)}
+            {renderActivityTable(userActivities.data)}
           </TabsContent>
-        </Tabs>
+        </UserActivityTabs>
 
-        <div className="flex flex-col items-center gap-4 mt-4 text-sm">
-          <div className="text-center text-muted-foreground">
+        <div className="flex justify-between items-center gap-2 mt-4 text-sm text-muted-foreground">
+          <div>
             Showing
             <span className="font-medium text-foreground mx-1">
               {limitNumber}

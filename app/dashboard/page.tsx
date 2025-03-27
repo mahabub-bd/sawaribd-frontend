@@ -23,6 +23,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { CopyButton } from "@/components/dashboard/copy-button";
+import { fetchProtectedData } from "@/utils/apiServices";
 
 // Define the activity type based on the actual API response
 interface UserActivity {
@@ -58,19 +59,9 @@ const AdminDashboard = async () => {
   let activityError = null;
 
   try {
-    const response = await fetch(
-      `https://api.sawaribd.com/user-activity/${userId}/recent`,
-      {
-        cache: "no-store", // Don't cache this data
-        next: { revalidate: 60 }, // Revalidate every 60 seconds
-      }
+    const responseData = await fetchProtectedData(
+      `user-activity/${userId}/recent`
     );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch activity: ${response.status}`);
-    }
-
-    const responseData = await response.json();
 
     // Check if the response is an array
     if (Array.isArray(responseData)) {
@@ -188,9 +179,7 @@ const AdminDashboard = async () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-
+    <div className="container mx-auto px-4">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         {/* User Profile Card */}
         <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300">

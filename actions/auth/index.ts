@@ -107,7 +107,7 @@ export async function signOut() {
       return;
     }
 
-    const response = await fetch(`${backendUrl}/auth/logout`, {
+    const response = await fetch(`${backendUrl}/auth/signout`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,

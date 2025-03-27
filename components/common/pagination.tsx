@@ -10,11 +10,13 @@ import {
 interface PaginationComponentProps {
   currentPage: number;
   totalPages: number;
+  baseUrl?: string;
 }
 
 export function PaginationComponent({
   currentPage,
   totalPages,
+  baseUrl = "?page=",
 }: PaginationComponentProps) {
   return (
     <Pagination>
@@ -22,7 +24,7 @@ export function PaginationComponent({
         {/* Previous Button */}
         <PaginationItem>
           <PaginationPrevious
-            href={`?page=${currentPage - 1}`}
+            href={`${baseUrl}${currentPage - 1}`}
             aria-disabled={currentPage <= 1}
             tabIndex={currentPage <= 1 ? -1 : undefined}
             className={
@@ -35,7 +37,7 @@ export function PaginationComponent({
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
-              href={`?page=${page}`}
+              href={`${baseUrl}${page}`}
               isActive={page === currentPage}
             >
               {page}
@@ -46,7 +48,7 @@ export function PaginationComponent({
         {/* Next Button */}
         <PaginationItem>
           <PaginationNext
-            href={`?page=${currentPage + 1}`}
+            href={`${baseUrl}${currentPage + 1}`}
             aria-disabled={currentPage >= totalPages}
             tabIndex={currentPage >= totalPages ? -1 : undefined}
             className={

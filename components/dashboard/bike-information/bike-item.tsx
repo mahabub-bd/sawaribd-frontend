@@ -114,7 +114,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   return (
     <Card className="overflow-hidden border border-border/60 hover:border-border transition-all duration-200 shadow-sm hover:shadow-md">
       <CardHeader className="pb-3 space-y-0">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="flex  items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <div className="bg-primary/10 p-2 rounded-md">
               <Bike className="h-5 w-5 text-primary" />

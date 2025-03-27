@@ -37,7 +37,7 @@ export const generateBikePdfContent = (bikeDetails: BikeDetailsType) => {
       <style>
         @page {
           size: A4;
-          margin: 20mm 10mm 15mm 10mm;
+          margin: 10mm 10mm 10mm 10mm;
         }
         body {
           font-family: Arial, sans-serif;
@@ -51,7 +51,7 @@ export const generateBikePdfContent = (bikeDetails: BikeDetailsType) => {
         .container {
           max-width: 190mm;
           margin: 0 auto;
-          padding-top: 10mm;
+          padding-top: 5mm;
         }
         .header {
           text-align: center;

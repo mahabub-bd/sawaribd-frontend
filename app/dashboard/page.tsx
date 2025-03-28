@@ -330,7 +330,9 @@ const AdminDashboard = async () => {
         </Card>
 
         {/* Statistics Card */}
-        <UserStatistics userId={session?.user?.id || ""} />
+        {session?.user?.role === "admin" && (
+          <UserStatistics userId={session?.user?.id || ""} />
+        )}
 
         {/* Additional Card */}
         <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300 md:p-6 p-2">

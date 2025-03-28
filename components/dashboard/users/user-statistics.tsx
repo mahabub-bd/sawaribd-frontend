@@ -25,6 +25,7 @@ export default async function UserStatistics({ userId }: { userId: string }) {
       activityResponse,
       userResponse.json(),
     ]);
+    console.log(activity, userInfo);
 
     const today = new Date().toISOString().split("T")[0];
 

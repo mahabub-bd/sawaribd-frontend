@@ -30,6 +30,7 @@ import { z } from "zod";
 const placeholders: Record<string, string> = {
   name: "Enter User Name",
   email: "Enter Email Address",
+  password: "Enter New Password",
 };
 
 const userEditSchema = z.object({
@@ -41,6 +42,11 @@ const userEditSchema = z.object({
     .string()
     .email({ message: "Please enter a valid email address." })
     .trim(),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .optional()
+    .or(z.literal("")),
   role: z.enum(["user", "admin", "moderator"], {
     required_error: "Role is required.",
   }),
@@ -58,6 +64,7 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
     defaultValues: {
       name: user.name,
       email: user.email,
+      password: "",
       role: user.role as "user" | "admin" | "moderator",
     },
   });
@@ -66,7 +73,14 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
     values
   ) => {
     try {
-      const updatedData = { ...values, id: id };
+      // Only include password in the update if it's not empty
+      const updatedData = {
+        ...values,
+        id: id,
+        // If password is empty, remove it from the payload
+        ...(values.password === "" && { password: undefined }),
+      };
+
       await patchData("users", id, updatedData);
       toast.success("User updated successfully");
       serverRevalidate("/admin-dashboard/users");
@@ -109,6 +123,28 @@ export default function UserEditForm({ user, isOpen, id }: UserEditFormProps) {
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Password Field */}
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder={placeholders.password}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+              <p className="text-xs text-muted-foreground">
+                Leave blank to keep the current password
+              </p>
             </FormItem>
           )}
         />

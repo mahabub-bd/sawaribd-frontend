@@ -25,6 +25,7 @@ import {
 import { CopyButton } from "@/components/dashboard/copy-button";
 import { fetchProtectedData } from "@/utils/apiServices";
 import { formatDateTime } from "@/utils/helper";
+import UserStatistics from "@/components/dashboard/users/user-statistics";
 
 // Define the activity type based on the actual API response
 interface UserActivity {
@@ -174,10 +175,10 @@ const AdminDashboard = async () => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto ">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         {/* User Profile Card */}
-        <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300">
+        <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300 md:p-6 p-2">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold">Profile</CardTitle>
@@ -244,7 +245,7 @@ const AdminDashboard = async () => {
         </Card>
 
         {/* Activity Card */}
-        <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300">
+        <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300 md:p-6 p-2">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-bold flex items-center gap-2">
@@ -329,34 +330,10 @@ const AdminDashboard = async () => {
         </Card>
 
         {/* Statistics Card */}
-        <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold">Statistics</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-primary/5 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground">Total Logins</p>
-                <h3 className="text-2xl font-bold mt-1">24</h3>
-              </div>
-              <div className="bg-primary/5 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground">Actions Today</p>
-                <h3 className="text-2xl font-bold mt-1">7</h3>
-              </div>
-              <div className="bg-primary/5 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground">Last Active</p>
-                <h3 className="text-lg font-medium mt-1">2 mins ago</h3>
-              </div>
-              <div className="bg-primary/5 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground">Account Age</p>
-                <h3 className="text-lg font-medium mt-1">32 days</h3>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <UserStatistics userId={session?.user?.id || ""} />
 
         {/* Additional Card */}
-        <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300">
+        <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300 md:p-6 p-2">
           <CardHeader>
             <CardTitle className="text-xl font-bold">Quick Actions</CardTitle>
           </CardHeader>

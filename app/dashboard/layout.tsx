@@ -1,3 +1,4 @@
+import { Footer } from "@/components/common/footer";
 import Navbar from "@/components/common/header/Navbar";
 import SideMenu from "@/components/dashboard/SideMenu";
 
@@ -19,6 +20,7 @@ export default function AdminDashboardLayout({
           </div>
         </div>
       </div>
+      <Footer />
     </section>
   );
 }

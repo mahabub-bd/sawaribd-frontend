@@ -7,14 +7,15 @@ import { formatDateTime } from "@/utils/helper";
 export default async function UserStatistics({ userId }: { userId: string }) {
   // Verify session first
   const session = await getSession();
+
   if (!session) {
     throw new Error("Unauthorized - Please log in");
   }
 
   try {
     const [activityResponse, userResponse] = await Promise.all([
-      fetchData(`user-activity/${userId}`),
-      fetch("https://api.sawaribd.com/users/676bd7bbbfefdaebb57bc4ba"),
+      fetchData(`user-activity/${userId || null}`),
+      fetch(`https://api.sawaribd.com/users/${userId}`),
     ]);
 
     if (!activityResponse || !userResponse.ok) {
@@ -25,7 +26,6 @@ export default async function UserStatistics({ userId }: { userId: string }) {
       activityResponse,
       userResponse.json(),
     ]);
-    console.log(activity, userInfo);
 
     const today = new Date().toISOString().split("T")[0];
 

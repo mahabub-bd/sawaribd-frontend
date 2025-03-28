@@ -26,17 +26,9 @@ import { CopyButton } from "@/components/dashboard/copy-button";
 import { fetchProtectedData } from "@/utils/apiServices";
 import { formatDateTime } from "@/utils/helper";
 import UserStatistics from "@/components/dashboard/users/user-statistics";
+import { UserActivityTypes } from "@/types";
 
 // Define the activity type based on the actual API response
-interface UserActivity {
-  _id: string;
-  userId: string;
-  action: string;
-  path: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
 
 // This is a Server Component (no "use client" directive)
 const AdminDashboard = async () => {
@@ -57,43 +49,48 @@ const AdminDashboard = async () => {
   const userId = session?.user?.id || "ID not available";
 
   // Fetch user activity data
-  let userActivity: UserActivity[] = [];
+  let userActivity: UserActivityTypes[] = [];
   let activityError = null;
 
-  try {
-    const responseData = await fetchProtectedData(
-      `user-activity/${userId}/recent`
-    );
+  // Only fetch activity if we have a valid userId (not the fallback string)
+  if (userId !== "ID not available" && session?.user?.id) {
+    try {
+      const responseData = await fetchProtectedData(
+        `user-activity/${userId}/recent`
+      );
 
-    // Check if the response is an array
-    if (Array.isArray(responseData)) {
-      userActivity = responseData;
-    } else if (responseData && typeof responseData === "object") {
-      // If it's an object with data property that's an array
-      if (Array.isArray(responseData.data)) {
-        userActivity = responseData.data;
-      } else if (
-        responseData.activities &&
-        Array.isArray(responseData.activities)
-      ) {
-        userActivity = responseData.activities;
-      } else {
-        // If it's a single activity object, wrap it in an array
-        if (responseData._id) {
-          userActivity = [responseData];
+      // Check if the response is an array
+      if (Array.isArray(responseData)) {
+        userActivity = responseData;
+      } else if (responseData && typeof responseData === "object") {
+        // If it's an object with data property that's an array
+        if (Array.isArray(responseData.data)) {
+          userActivity = responseData.data;
+        } else if (
+          responseData.activities &&
+          Array.isArray(responseData.activities)
+        ) {
+          userActivity = responseData.activities;
         } else {
-          console.error("Unexpected API response format:", responseData);
-          throw new Error("Unexpected API response format");
+          // If it's a single activity object, wrap it in an array
+          if (responseData._id) {
+            userActivity = [responseData];
+          } else {
+            console.error("Unexpected API response format:", responseData);
+            throw new Error("Unexpected API response format");
+          }
         }
+      } else {
+        console.error("Unexpected API response format:", responseData);
+        throw new Error("Unexpected API response format");
       }
-    } else {
-      console.error("Unexpected API response format:", responseData);
-      throw new Error("Unexpected API response format");
+    } catch (error) {
+      console.error("Error fetching user activity:", error);
+      activityError =
+        error instanceof Error ? error.message : "Failed to load activity data";
     }
-  } catch (error) {
-    console.error("Error fetching user activity:", error);
-    activityError =
-      error instanceof Error ? error.message : "Failed to load activity data";
+  } else {
+    activityError = "User ID not available. Please log in again.";
   }
 
   // Get action color and icon based on action type
@@ -177,7 +174,6 @@ const AdminDashboard = async () => {
   return (
     <div className="container mx-auto ">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-        {/* User Profile Card */}
         <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300 md:p-6 p-2">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
@@ -330,9 +326,11 @@ const AdminDashboard = async () => {
         </Card>
 
         {/* Statistics Card */}
-        {session?.user?.role === "admin" && (
-          <UserStatistics userId={session?.user?.id || ""} />
-        )}
+        {session?.user?.role === "admin" &&
+          session?.user?.id &&
+          session?.user?.id !== "ID not available" && (
+            <UserStatistics userId={session?.user?.id} />
+          )}
 
         {/* Additional Card */}
         <Card className="w-full shadow-md hover:shadow-lg transition-shadow duration-300 md:p-6 p-2">

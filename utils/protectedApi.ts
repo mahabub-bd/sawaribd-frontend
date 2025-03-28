@@ -52,7 +52,7 @@ export async function protectedApi(
   }
 
   const data: any = await response.json();
-  // console.log({ data });
+  console.log({ data });
 
   return data;
 }

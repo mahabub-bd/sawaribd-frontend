@@ -123,13 +123,18 @@ export async function signOut() {
   }
 }
 
-export async function refreshToken() {
-  try {
-    const session = await getSession();
-    if (!session?.refreshToken) {
-      throw new Error("No refresh token available.");
-    }
+export async function refreshToken(): Promise<string> {
+  const session = await getSession();
 
+  // Validate session and refresh token
+  if (!session) {
+    throw new Error("No session found");
+  }
+  if (!session.refreshToken) {
+    throw new Error("No refresh token available");
+  }
+
+  try {
     const response = await fetch(`${backendUrl}/auth/refresh`, {
       method: "GET",
       headers: {
@@ -138,16 +143,23 @@ export async function refreshToken() {
       },
     });
 
+    // Check for network errors
     if (!response.ok) {
-      throw new Error("Failed to refresh token.");
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Failed to refresh token. Status: ${response.status}`
+      );
     }
 
     const data = await response.json();
 
+    // Validate response data
     if (!data.accessToken) {
-      throw new Error("No access token returned from refresh.");
+      throw new Error("No access token returned from refresh");
     }
 
+    // Update session
     await saveSession({
       ...session,
       accessToken: data.accessToken,
@@ -157,6 +169,15 @@ export async function refreshToken() {
     return data.accessToken;
   } catch (error) {
     console.error("Error refreshing token:", error);
+
+    // Clear session if refresh token is invalid/expired
+    if (
+      (error instanceof Error && error.message.includes("invalid")) ||
+      (error instanceof Error && error.message.includes("expired"))
+    ) {
+      await deleteSession();
+    }
+
     throw error;
   }
 }
@@ -174,8 +195,6 @@ export async function forgotPassword(
       error: validationFields.error.flatten().fieldErrors,
     };
   }
-
-  console.log("validationFields", validationFields);
 
   // const response = await fetch(`${backendUrl}/auth/forgot-password`, {
   //   method: "POST",

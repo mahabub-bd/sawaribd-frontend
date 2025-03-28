@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 export default function Loading() {
   return (
@@ -23,11 +23,9 @@ export default function Loading() {
         ))}
       </div>
 
-      <p className="mt-6 text-sm font-medium text-muted-foreground">Loading your experience</p>
+      <p className="mt-6 text-sm font-medium text-muted-foreground">
+        Loading your experience
+      </p>
     </div>
-  )
+  );
 }
-
-
-
-

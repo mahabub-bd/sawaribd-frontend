@@ -1,7 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { UserActivityTypes } from "@/types";
 import { formatDateTime } from "@/utils/helper";
-import type { ReactNode } from "react";
 
 export default function UserActivityList({
   userId,

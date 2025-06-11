@@ -1,15 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Search, Filter, Bike } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,17 +14,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-} from "@/components/ui/accordion";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { brands } from "@/constants";
+import { getDateFilterRange, type DateRangeFilterType } from "@/lib/utils";
 import type { BikeDetailsType, Brand } from "@/types";
+import { Bike, Filter, Search } from "lucide-react";
+import { useState } from "react";
 import BikeAddAction from "../modal/BikeAddAction";
 import BikeItem from "./bike-item";
+import { PaginationComponent } from "@/components/common/pagination";
 
 interface BikeProps {
   bikedatas: BikeDetailsType[];
@@ -36,96 +39,15 @@ interface BikeProps {
 export default function BikeList({ bikedatas }: BikeProps) {
   const [brandFilter, setBrandFilter] = useState<string | null>("all");
   const [yearFilter, setYearFilter] = useState<number | null>(null);
-  const [engineNumber, setEngineNumber] = useState<string>("");
-  const [chassisNumber, setChassisNumber] = useState<string>("");
-  const [dateRangeFilter, setDateRangeFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [dateRangeFilter, setDateRangeFilter] =
+    useState<DateRangeFilterType>("all");
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 5; // Adjust as needed
 
   const currentYear = new Date().getFullYear();
   const lastEightYears = Array.from({ length: 8 }, (_, i) => currentYear - i);
-
-  const getDateFilterRange = (filter: string) => {
-    const today = new Date();
-
-    // Set time to start of day (00:00:00)
-    const startOfToday = new Date(today);
-    startOfToday.setHours(0, 0, 0, 0);
-
-    // Set time to end of day (23:59:59.999)
-    const endOfToday = new Date(today);
-    endOfToday.setHours(23, 59, 59, 999);
-
-    const startOfWeek = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() - today.getDay() + 1
-    ); // Monday
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const startOfYear = new Date(today.getFullYear(), 0, 1);
-    startOfYear.setHours(0, 0, 0, 0);
-
-    const startOfLastMonth = new Date(
-      today.getFullYear(),
-      today.getMonth() - 1,
-      1
-    );
-    startOfLastMonth.setHours(0, 0, 0, 0);
-
-    const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-    endOfLastMonth.setHours(23, 59, 59, 999);
-
-    const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
-    startOfLastYear.setHours(0, 0, 0, 0);
-
-    const endOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
-    endOfLastYear.setHours(23, 59, 59, 999);
-
-    const startOfLastWeek = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() - today.getDay() - 6
-    );
-    startOfLastWeek.setHours(0, 0, 0, 0);
-
-    const endOfLastWeek = new Date(
-      startOfLastWeek.getFullYear(),
-      startOfLastWeek.getMonth(),
-      startOfLastWeek.getDate() + 6
-    );
-    endOfLastWeek.setHours(23, 59, 59, 999);
-
-    const sixMonthsAgo = new Date(
-      today.getFullYear(),
-      today.getMonth() - 6,
-      today.getDate()
-    );
-    sixMonthsAgo.setHours(0, 0, 0, 0);
-
-    switch (filter) {
-      case "today":
-        return [startOfToday, endOfToday];
-      case "thisWeek":
-        return [startOfWeek, endOfToday];
-      case "lastWeek":
-        return [startOfLastWeek, endOfLastWeek];
-      case "thisMonth":
-        return [startOfMonth, endOfToday];
-      case "lastMonth":
-        return [startOfLastMonth, endOfLastMonth];
-      case "thisYear":
-        return [startOfYear, endOfToday];
-      case "lastYear":
-        return [startOfLastYear, endOfLastYear];
-      case "lastSixMonths":
-        return [sixMonthsAgo, endOfToday];
-      default:
-        return null;
-    }
-  };
 
   const filteredData = bikedatas.filter((data) => {
     const brandMatch =
@@ -133,11 +55,11 @@ export default function BikeList({ bikedatas }: BikeProps) {
         ? data.bikeBrand === brandFilter
         : true;
     const yearMatch = yearFilter ? data.manufacturingYear === yearFilter : true;
-    const engineMatch = engineNumber
-      ? data.engineNumber?.toLowerCase().includes(engineNumber.toLowerCase())
-      : true;
-    const chassisMatch = chassisNumber
-      ? data.chassisNumber?.toLowerCase().includes(chassisNumber.toLowerCase())
+
+    // Combined search for engine and chassis number
+    const searchMatch = searchQuery
+      ? data.engineNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        data.chassisNumber?.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
     const dateFilterMatch = (() => {
@@ -150,24 +72,33 @@ export default function BikeList({ bikedatas }: BikeProps) {
       return createdAt >= range[0] && createdAt <= range[1];
     })();
 
-    return (
-      brandMatch && yearMatch && engineMatch && chassisMatch && dateFilterMatch
-    );
+    return brandMatch && yearMatch && searchMatch && dateFilterMatch;
   });
+
+  // Calculate pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const resetFilters = () => {
     setBrandFilter("all");
     setYearFilter(null);
-    setEngineNumber("");
-    setChassisNumber("");
+    setSearchQuery("");
     setDateRangeFilter("all");
+    setCurrentPage(1);
   };
 
   const hasActiveFilters =
     brandFilter !== "all" ||
     yearFilter !== null ||
-    engineNumber !== "" ||
-    chassisNumber !== "" ||
+    searchQuery !== "" ||
     dateRangeFilter !== "all";
 
   return (
@@ -212,32 +143,18 @@ export default function BikeList({ bikedatas }: BikeProps) {
           <AccordionItem value="filters" className="border-none">
             <AccordionContent>
               <div className="bg-muted/40 p-4 rounded-lg mb-4">
-                <div className="grid md:grid-cols-5 grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Engine Number</label>
-                    <div className="relative">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="text"
-                        placeholder="Search..."
-                        value={engineNumber}
-                        onChange={(e) => setEngineNumber(e.target.value)}
-                        className="pl-8"
-                      />
-                    </div>
-                  </div>
-
+                <div className="grid md:grid-cols-4 grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">
-                      Chassis Number
+                      Engine/Chassis Number
                     </label>
                     <div className="relative">
                       <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="text"
-                        placeholder="Search..."
-                        value={chassisNumber}
-                        onChange={(e) => setChassisNumber(e.target.value)}
+                        placeholder="Search engine or chassis number..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         className="pl-8"
                       />
                     </div>
@@ -291,7 +208,9 @@ export default function BikeList({ bikedatas }: BikeProps) {
                     <label className="text-sm font-medium">Date Range</label>
                     <Select
                       value={dateRangeFilter}
-                      onValueChange={(value) => setDateRangeFilter(value)}
+                      onValueChange={(value) =>
+                        setDateRangeFilter(value as DateRangeFilterType)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="All Dates" />
@@ -346,8 +265,8 @@ export default function BikeList({ bikedatas }: BikeProps) {
 
         {/* Bike Items */}
         <div className="space-y-4">
-          {filteredData && filteredData.length > 0 ? (
-            filteredData.map((data) => <BikeItem {...data} key={data._id} />)
+          {currentItems && currentItems.length > 0 ? (
+            currentItems.map((data) => <BikeItem {...data} key={data._id} />)
           ) : (
             <div className="text-center py-12 bg-muted/30 rounded-lg">
               <p className="text-muted-foreground">
@@ -361,6 +280,22 @@ export default function BikeList({ bikedatas }: BikeProps) {
             </div>
           )}
         </div>
+
+        {/* Pagination */}
+        {filteredData.length > 0 && (
+          <div className="mt-6">
+            <div className="text-sm text-muted-foreground mb-2 text-center">
+              Showing {indexOfFirstItem + 1}-
+              {Math.min(indexOfLastItem, filteredData.length)} of{" "}
+              {filteredData.length} bikes
+            </div>
+            <PaginationComponent
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
